@@ -25,6 +25,16 @@ public class Deck {
         return cardList.size();
     }
 
+    public String get(int i){
+        return "";
+    }
+
+    public void swap(int a, int b){
+    }
+
+    public void shuffle(){
+    }
+
     // number of cards with specified name
     public int cardCount(String name){
         int count = 0;
