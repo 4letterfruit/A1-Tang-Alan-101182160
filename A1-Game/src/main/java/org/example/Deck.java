@@ -60,4 +60,9 @@ public class Deck {
 
         return count;
     }
+
+    // retrieve the card at the top of the stack
+    public String draw(){
+        return "";
+    }
 }

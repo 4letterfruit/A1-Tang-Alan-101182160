@@ -114,4 +114,44 @@ class GameTest {
         assertEquals(6,  testGame.adventureDeck.cardCount("L20"));
         assertEquals(2,  testGame.adventureDeck.cardCount("E30"));
     }
+
+    @Test
+    void RESP_3_TEST_1(){
+        // reset the decks
+        testGame.adventureDeck = new Deck("F5/8,F10/7,F15/8,F20/7,F25/7,F30/4,F35/4,F40/2,F50/2,F70/1,D5/6,H10/12,S10/16,B15/8,L20/6,E30/2");
+        testGame.eventDeck = new Deck("Q2/3,Q3/4,Q4/3,Q5/2,E-Plague/1,E-Queen's Favor/2,E-Prosperity/2");
+
+        // test removing the cards
+        testGame.adventureDeck.swap(0, testGame.adventureDeck.size()-1);
+        assertEquals("F5", testGame.adventureDeck.draw());
+        assertEquals("E30", testGame.adventureDeck.draw());
+
+        assertEquals("E-Prosperity", testGame.eventDeck.draw());
+        assertEquals("E-Prosperity", testGame.eventDeck.draw());
+        assertEquals("E-Queen's Favor", testGame.eventDeck.draw());
+    }
+
+    @Test
+    void RESP_3_TEST_2(){
+        // reset the decks
+        testGame.adventureDeck = new Deck("F5/8,F10/7,F15/8,F20/7,F25/7,F30/4,F35/4,F40/2,F50/2,F70/1,D5/6,H10/12,S10/16,B15/8,L20/6,E30/2");
+        testGame.eventDeck = new Deck("Q2/3,Q3/4,Q4/3,Q5/2,E-Plague/1,E-Queen's Favor/2,E-Prosperity/2");
+
+        // check number of cards after drawing
+        testGame.adventureDeck.swap(0, testGame.adventureDeck.size()-1);
+        testGame.adventureDeck.draw();
+        assertEquals(99, testGame.adventureDeck.size());
+
+        testGame.adventureDeck.draw();
+        assertEquals(98, testGame.adventureDeck.size());
+
+        assertEquals(1,  testGame.adventureDeck.cardCount("E30"));
+        assertEquals(7, testGame.adventureDeck.cardCount("F5"));
+
+        assertEquals(2, testGame.eventDeck.cardCount("E-Prosperity"));
+        testGame.eventDeck.draw();
+        testGame.eventDeck.draw();
+        assertEquals(15, testGame.eventDeck.size());
+        assertEquals(0, testGame.eventDeck.cardCount("E-Prosperity"));
+    }
 }
