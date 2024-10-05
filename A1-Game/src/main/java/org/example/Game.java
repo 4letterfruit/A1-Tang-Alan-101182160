@@ -25,6 +25,13 @@ public class Game {
     }
 
     public void distributeCards(){
+        // draws a card for each player 12 times
+        for(int i = 0; i < 12; i++){
+            PLAYER_1.add(adventureDeck.draw());
+            PLAYER_2.add(adventureDeck.draw());
+            PLAYER_3.add(adventureDeck.draw());
+            PLAYER_4.add(adventureDeck.draw());
+        }
     }
 }
 
