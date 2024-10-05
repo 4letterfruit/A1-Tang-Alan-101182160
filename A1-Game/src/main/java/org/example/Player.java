@@ -6,4 +6,12 @@ public class Player {
     public Player(int id){
         this.id = id;
     }
+
+    public int handSize(){
+        return 0;
+    }
+
+    public int cardCount(String name){
+        return 0;
+    }
 }

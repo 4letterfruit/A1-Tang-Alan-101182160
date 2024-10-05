@@ -23,6 +23,9 @@ public class Game {
         PLAYER_3 = new Player(3);
         PLAYER_4 = new Player(4);
     }
+
+    public void distributeCards(){
+    }
 }
 
 

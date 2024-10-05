@@ -172,4 +172,54 @@ class GameTest {
         assertEquals(3, testGame.PLAYER_3.id);
         assertEquals(4, testGame.PLAYER_4.id);
     }
+
+    @Test
+    void RESP_5_TEST_1(){
+        // reset decks
+        testGame.adventureDeck = new Deck("F5/8,F10/7,F15/8,F20/7,F25/7,F30/4,F35/4,F40/2,F50/2,F70/1,D5/6,H10/12,S10/16,B15/8,L20/6,E30/2");
+        testGame.eventDeck = new Deck("Q2/3,Q3/4,Q4/3,Q5/2,E-Plague/1,E-Queen's Favor/2,E-Prosperity/2");
+
+        assertEquals(100, testGame.adventureDeck.size());
+
+        // distribute 12 cards per player, verify player hand size and deck size
+        testGame.distributeCards();
+        assertEquals(12, testGame.PLAYER_1.handSize());
+        assertEquals(12, testGame.PLAYER_2.handSize());
+        assertEquals(12, testGame.PLAYER_3.handSize());
+        assertEquals(12, testGame.PLAYER_4.handSize());
+        assertEquals(52, testGame.adventureDeck.size());
+    }
+
+    @Test
+    void RESP_5_TEST_2(){
+        // reset decks
+        testGame.adventureDeck = new Deck("F5/8,F10/7,F15/8,F20/7,F25/7,F30/4,F35/4,F40/2,F50/2,F70/1,D5/6,H10/12,S10/16,B15/8,L20/6,E30/2");
+        testGame.eventDeck = new Deck("Q2/3,Q3/4,Q4/3,Q5/2,E-Plague/1,E-Queen's Favor/2,E-Prosperity/2");
+
+        // reset players
+        testGame.PLAYER_1 = new Player(1);
+        testGame.PLAYER_2 = new Player(2);
+        testGame.PLAYER_3 = new Player(3);
+        testGame.PLAYER_4 = new Player(4);
+
+
+        // check that total number of each card has not changed
+        testGame.distributeCards();
+        assertEquals(8, testGame.adventureDeck.cardCount("F5") + testGame.PLAYER_1.cardCount("F5") + testGame.PLAYER_2.cardCount("F5") + testGame.PLAYER_3.cardCount("F5") + testGame.PLAYER_4.cardCount("F5"));
+        assertEquals(7, testGame.adventureDeck.cardCount("F10") + testGame.PLAYER_1.cardCount("F10") + testGame.PLAYER_2.cardCount("F10") + testGame.PLAYER_3.cardCount("F10") + testGame.PLAYER_4.cardCount("F10"));
+        assertEquals(8, testGame.adventureDeck.cardCount("F15") + testGame.PLAYER_1.cardCount("F15") + testGame.PLAYER_2.cardCount("F15") + testGame.PLAYER_3.cardCount("F15") + testGame.PLAYER_4.cardCount("F15"));
+        assertEquals(7, testGame.adventureDeck.cardCount("F20") + testGame.PLAYER_1.cardCount("F20") + testGame.PLAYER_2.cardCount("F20") + testGame.PLAYER_3.cardCount("F20") + testGame.PLAYER_4.cardCount("F20"));
+        assertEquals(7, testGame.adventureDeck.cardCount("F25") + testGame.PLAYER_1.cardCount("F25") + testGame.PLAYER_2.cardCount("F25") + testGame.PLAYER_3.cardCount("F25") + testGame.PLAYER_4.cardCount("F25"));
+        assertEquals(4, testGame.adventureDeck.cardCount("F30") + testGame.PLAYER_1.cardCount("F30") + testGame.PLAYER_2.cardCount("F30") + testGame.PLAYER_3.cardCount("F30") + testGame.PLAYER_4.cardCount("F30"));
+        assertEquals(4, testGame.adventureDeck.cardCount("F35") + testGame.PLAYER_1.cardCount("F35") + testGame.PLAYER_2.cardCount("F35") + testGame.PLAYER_3.cardCount("F35") + testGame.PLAYER_4.cardCount("F35"));
+        assertEquals(2, testGame.adventureDeck.cardCount("F40") + testGame.PLAYER_1.cardCount("F40") + testGame.PLAYER_2.cardCount("F40") + testGame.PLAYER_3.cardCount("F40") + testGame.PLAYER_4.cardCount("F40"));
+        assertEquals(2, testGame.adventureDeck.cardCount("F50") + testGame.PLAYER_1.cardCount("F50") + testGame.PLAYER_2.cardCount("F50") + testGame.PLAYER_3.cardCount("F50") + testGame.PLAYER_4.cardCount("F50"));
+        assertEquals(1, testGame.adventureDeck.cardCount("F70") + testGame.PLAYER_1.cardCount("F70") + testGame.PLAYER_2.cardCount("F70") + testGame.PLAYER_3.cardCount("F70") + testGame.PLAYER_4.cardCount("F70"));
+        assertEquals(6,  testGame.adventureDeck.cardCount("D5") + testGame.PLAYER_1.cardCount("D5") + testGame.PLAYER_2.cardCount("D5") + testGame.PLAYER_3.cardCount("D5") + testGame.PLAYER_4.cardCount("D5"));
+        assertEquals(12, testGame.adventureDeck.cardCount("H10") + testGame.PLAYER_1.cardCount("H10") + testGame.PLAYER_2.cardCount("H10") + testGame.PLAYER_3.cardCount("H10") + testGame.PLAYER_4.cardCount("H10"));
+        assertEquals(16, testGame.adventureDeck.cardCount("S10") + testGame.PLAYER_1.cardCount("S10") + testGame.PLAYER_2.cardCount("S10") + testGame.PLAYER_3.cardCount("S10") + testGame.PLAYER_4.cardCount("S10"));
+        assertEquals(8,  testGame.adventureDeck.cardCount("B15") + testGame.PLAYER_1.cardCount("B15") + testGame.PLAYER_2.cardCount("B15") + testGame.PLAYER_3.cardCount("B15") + testGame.PLAYER_4.cardCount("B15"));
+        assertEquals(6,  testGame.adventureDeck.cardCount("L20") + testGame.PLAYER_1.cardCount("L20") + testGame.PLAYER_2.cardCount("L20") + testGame.PLAYER_3.cardCount("L20") + testGame.PLAYER_4.cardCount("L20"));
+        assertEquals(2,  testGame.adventureDeck.cardCount("E30") + testGame.PLAYER_1.cardCount("E30") + testGame.PLAYER_2.cardCount("E30") + testGame.PLAYER_3.cardCount("E30") + testGame.PLAYER_4.cardCount("E30"));
+    }
 }
