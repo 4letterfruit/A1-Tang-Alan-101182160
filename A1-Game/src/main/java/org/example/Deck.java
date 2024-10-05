@@ -63,6 +63,6 @@ public class Deck {
 
     // retrieve the card at the top of the stack
     public String draw(){
-        return "";
+        return cardList.removeLast();
     }
 }
