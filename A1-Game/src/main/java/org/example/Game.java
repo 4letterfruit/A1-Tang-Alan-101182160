@@ -4,6 +4,8 @@ public class Game {
     Deck adventureDeck = null;
     Deck eventDeck = null;
 
+    Player PLAYER_1, PLAYER_2, PLAYER_3, PLAYER_4;
+
     // Game constructor
     public Game(){
         initializeDecks();

@@ -154,4 +154,22 @@ class GameTest {
         assertEquals(15, testGame.eventDeck.size());
         assertEquals(0, testGame.eventDeck.cardCount("E-Prosperity"));
     }
+
+    @Test
+    void RESP_4_TEST_1(){
+        // confirm players are created
+        assertNotNull(testGame.PLAYER_1);
+        assertNotNull(testGame.PLAYER_2);
+        assertNotNull(testGame.PLAYER_3);
+        assertNotNull(testGame.PLAYER_4);
+    }
+
+    @Test
+    void RESP_4_TEST_2(){
+        // verify player ids 1-4
+        assertEquals(1, testGame.PLAYER_1.id);
+        assertEquals(2, testGame.PLAYER_2.id);
+        assertEquals(3, testGame.PLAYER_3.id);
+        assertEquals(4, testGame.PLAYER_4.id);
+    }
 }
