@@ -87,7 +87,7 @@ class GameTest {
             }
         }
         // if over half of the shuffles failed then the shuffle function is likely faulty
-        assertFalse(fails>5);
+        assertFalse(fails>2);
     }
 
     @Test

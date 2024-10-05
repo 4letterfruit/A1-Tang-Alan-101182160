@@ -1,5 +1,7 @@
 package org.example;
 import java.util.ArrayList;
+import java.util.Random;
+
 public class Deck {
     ArrayList<String> cardList;
 
@@ -25,14 +27,26 @@ public class Deck {
         return cardList.size();
     }
 
+    // get the element of cardList at index i
     public String get(int i){
-        return "";
+        return cardList.get(i);
     }
 
+    // swap 2 elements within cardList
     public void swap(int a, int b){
+        String temp = get(a);
+        cardList.set(a, get(b));
+        cardList.set(b, temp);
     }
 
+    // randomly swap elements within cardList 100 times
     public void shuffle(){
+        for(int i = 0; i < 100; i++){
+            int a = (int) (Math.random()*size());
+            int b = (int) (Math.random()*size());
+
+            swap(a, b);
+        }
     }
 
     // number of cards with specified name
