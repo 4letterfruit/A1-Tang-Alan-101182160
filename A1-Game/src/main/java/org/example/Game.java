@@ -1,4 +1,6 @@
 package org.example;
+import java.util.Scanner;
+import java.io.PrintWriter;
 
 public class Game {
     Deck adventureDeck = null;
@@ -32,6 +34,9 @@ public class Game {
             PLAYER_3.add(adventureDeck.draw());
             PLAYER_4.add(adventureDeck.draw());
         }
+    }
+
+    public void startGame(Scanner input, PrintWriter output){
     }
 }
 

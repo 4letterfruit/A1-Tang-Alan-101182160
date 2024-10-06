@@ -2,6 +2,9 @@ package org.example;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.Arrays;
+import java.util.Scanner;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 class GameTest {
     Game testGame = new Game();
@@ -243,6 +246,47 @@ class GameTest {
 
     @Test
     void RESP_6_TEST_1(){
+        // confirm cards are shuffled and distributed on game launch
         testGame = new Game();
+        Game game2 = new Game();
+
+        assertEquals(52, testGame.adventureDeck.size());
+        assertEquals(12, testGame.PLAYER_1.handSize());
+        assertEquals(12, testGame.PLAYER_2.handSize());
+        assertEquals(12, testGame.PLAYER_3.handSize());
+        assertEquals(12, testGame.PLAYER_4.handSize());
+
+
+        int fails = 0;
+        if (Arrays.equals(game2.adventureDeck.cardList.toArray(), testGame.adventureDeck.cardList.toArray())){
+            fails++;
+        }
+        if (Arrays.equals(game2.PLAYER_1.hand.toArray(), testGame.PLAYER_1.hand.toArray())){
+            fails++;
+        }
+        if (Arrays.equals(game2.PLAYER_2.hand.toArray(), testGame.PLAYER_2.hand.toArray())){
+            fails++;
+        }
+        if (Arrays.equals(game2.PLAYER_3.hand.toArray(), testGame.PLAYER_3.hand.toArray())){
+            fails++;
+        }
+        if (Arrays.equals(game2.PLAYER_4.hand.toArray(), testGame.PLAYER_4.hand.toArray())){
+            fails++;
+        }
+
+        // if card arrays are all the same, deck was not shuffled
+        assertNotEquals(5, fails);
+    }
+
+    @Test
+    void RESP_6_TEST_2(){
+        testGame = new Game();
+
+        // verify the prompt to start the game
+        String input = "\n";
+        StringWriter output = new StringWriter();
+        testGame.startGame(new Scanner(input), new PrintWriter(output));
+
+        assertTrue(output.toString().contains("Starting game"));
     }
 }
