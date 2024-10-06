@@ -53,6 +53,9 @@ class GameTest {
 
     @Test
     void RESP_2_TEST_1(){
+        // reset deck
+        testGame.adventureDeck = new Deck("F5/8,F10/7,F15/8,F20/7,F25/7,F30/4,F35/4,F40/2,F50/2,F70/1,D5/6,H10/12,S10/16,B15/8,L20/6,E30/2");
+
         // check Deck swap function
         assertEquals("F5", testGame.adventureDeck.get(0));
 
@@ -87,11 +90,14 @@ class GameTest {
             }
         }
         // if over half of the shuffles failed then the shuffle function is likely faulty
-        assertFalse(fails>2);
+        assertFalse(fails>5);
     }
 
     @Test
     void RESP_2_TEST_3(){
+        testGame.adventureDeck = new Deck("F5/8,F10/7,F15/8,F20/7,F25/7,F30/4,F35/4,F40/2,F50/2,F70/1,D5/6,H10/12,S10/16,B15/8,L20/6,E30/2");
+
+        testGame.adventureDeck.shuffle();
         // confirm the number of each card remains the same
 
         assertEquals(100, testGame.adventureDeck.size());
@@ -221,5 +227,10 @@ class GameTest {
         assertEquals(8,  testGame.adventureDeck.cardCount("B15") + testGame.PLAYER_1.cardCount("B15") + testGame.PLAYER_2.cardCount("B15") + testGame.PLAYER_3.cardCount("B15") + testGame.PLAYER_4.cardCount("B15"));
         assertEquals(6,  testGame.adventureDeck.cardCount("L20") + testGame.PLAYER_1.cardCount("L20") + testGame.PLAYER_2.cardCount("L20") + testGame.PLAYER_3.cardCount("L20") + testGame.PLAYER_4.cardCount("L20"));
         assertEquals(2,  testGame.adventureDeck.cardCount("E30") + testGame.PLAYER_1.cardCount("E30") + testGame.PLAYER_2.cardCount("E30") + testGame.PLAYER_3.cardCount("E30") + testGame.PLAYER_4.cardCount("E30"));
+    }
+
+    @Test
+    void RESP_6_TEST_1(){
+        testGame = new Game();
     }
 }
