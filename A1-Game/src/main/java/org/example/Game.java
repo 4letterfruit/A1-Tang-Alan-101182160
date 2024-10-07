@@ -12,6 +12,11 @@ public class Game {
     public Game(){
         initializeDecks();
         initializePlayers();
+
+        adventureDeck.shuffle();
+        eventDeck.shuffle();
+
+        distributeCards();
     }
 
     private void initializeDecks(){
@@ -37,6 +42,12 @@ public class Game {
     }
 
     public void startGame(Scanner input, PrintWriter output){
+        output.println("Press Enter to begin");
+        output.flush();
+
+        input.nextLine();
+        output.println("Starting game");
+        output.flush();
     }
 }
 
