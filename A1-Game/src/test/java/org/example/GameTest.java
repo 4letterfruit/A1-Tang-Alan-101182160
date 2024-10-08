@@ -295,4 +295,36 @@ class GameTest {
 
         assertTrue(output.toString().contains("Starting game"));
     }
+
+    @Test
+    void RESP_7_TEST_1(){
+        testGame = new Game();
+
+        // confirm Player 1 starting
+        assertEquals(testGame.PLAYER_1, testGame.activePlayer);
+    }
+
+    @Test
+    void RESP_7_TEST_2(){
+        testGame = new Game();
+
+        // reset players and cards
+        testGame.initializePlayers();
+        testGame.initializeDecks();
+
+        // get some foe cards in player 1's hand
+        testGame.adventureDeck.swap(0, 87);
+        testGame.adventureDeck.swap(10, 83);
+
+
+        testGame.distributeCards();
+
+        // verify the player's hand is displayed in sorted order
+        Scanner input = new Scanner("\n");
+        StringWriter output = new StringWriter();
+        testGame.startTurn(input, new PrintWriter(output), testGame.activePlayer);
+
+        assertEquals(testGame.PLAYER_1.hand.toString(), output.toString());
+        assertTrue(output.toString().contains("F5, F10, D5, S10, S10, S10, H10, H10, H10, B15, L20, E30"));
+    }
 }
