@@ -79,12 +79,21 @@ public class Game {
 
             case "E-Plague":
                 output.println("E-Plague: Lose 2 shields");
+                activePlayer.decreaseShields(2);
                 break;
             case "E-Queen's Favor":
                 output.println("E-Queen's Favor: Draw 2 adventure cards");
+                activePlayer.add(adventureDeck.draw());
+                activePlayer.add(adventureDeck.draw());
                 break;
             case "E-Prosperity":
                 output.println("E-Prosperity: All players draw 2 adventure cards");
+                for(int i = 0; i < 2; i++){
+                    PLAYER_1.add(adventureDeck.draw());
+                    PLAYER_2.add(adventureDeck.draw());
+                    PLAYER_3.add(adventureDeck.draw());
+                    PLAYER_4.add(adventureDeck.draw());
+                }
                 break;
         }
         output.flush();

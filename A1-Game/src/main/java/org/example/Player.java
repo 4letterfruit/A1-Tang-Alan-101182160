@@ -5,6 +5,7 @@ import java.util.HashMap;
 public class Player {
     int id;
     ArrayList<String> hand;
+    int shields;
 
     HashMap<String, Integer> cardValue;
 
@@ -70,9 +71,17 @@ public class Player {
     }
 
     public void addShields(int gain){
+        shields += gain;
+    }
+
+    public void decreaseShields(int dec){
+        shields -= dec;
+        if (shields < 0){
+            shields = 0;
+        }
     }
 
     public int getShields(){
-        return -1;
+        return shields;
     }
 }
