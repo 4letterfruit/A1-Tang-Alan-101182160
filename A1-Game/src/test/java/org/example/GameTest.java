@@ -327,4 +327,34 @@ class GameTest {
         assertTrue(output.toString().contains(testGame.PLAYER_1.hand.toString()));
         assertTrue(output.toString().contains("F5, F10, D5, S10, S10, S10, H10, H10, H10, B15, L20, E30"));
     }
+
+    @Test
+    void RESP_8_TEST_1(){
+        testGame = new Game();
+
+        testGame.initializeDecks();
+
+        Scanner input = new Scanner("\n");
+        StringWriter output = new StringWriter();
+        testGame.drawEvent(input, new PrintWriter(output));
+
+        // Confirm prosperity is drawn and declared
+        assertTrue(output.toString().contains("E-Prosperity"));
+        assertTrue(output.toString().contains("All players draw 2 adventure cards"));
+    }
+
+    @Test
+    void RESP_8_TEST_2(){
+        testGame = new Game();
+
+        testGame.initializeDecks();
+        testGame.eventDeck.swap(0, 16);
+
+        Scanner input = new Scanner("\n");
+        StringWriter output = new StringWriter();
+        testGame.drawEvent(input, new PrintWriter(output));
+
+        // Confirm Q2 is drawn and declared
+        assertTrue(output.toString().contains("Sponsor a quest: Q2"));
+    }
 }

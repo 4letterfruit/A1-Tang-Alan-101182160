@@ -63,6 +63,9 @@ public class Game {
         output.flush();
     }
 
+    public void drawEvent(Scanner input, PrintWriter output){
+    }
+
     public void clearScreen(){
         for (int i = 0; i < 50; i++){
             System.out.println();
