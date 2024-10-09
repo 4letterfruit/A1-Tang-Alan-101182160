@@ -30,6 +30,8 @@ public class Game {
         PLAYER_2 = new Player(2);
         PLAYER_3 = new Player(3);
         PLAYER_4 = new Player(4);
+
+        activePlayer = PLAYER_1;
     }
 
     public void distributeCards(){
@@ -52,6 +54,33 @@ public class Game {
     }
 
     public void startTurn(Scanner input, PrintWriter output, Player player){
+        // clear the screen
+        clearScreen();
+        output.println("Active Player: " + activePlayer.id);
+        output.flush();
+        activePlayer.sortHand();
+        output.println(activePlayer.hand.toString());
+        output.flush();
+    }
+
+    public void clearScreen(){
+        for (int i = 0; i < 50; i++){
+            System.out.println();
+        }
+    }
+
+    public static void main(String[] args){
+        Game game = new Game();
+        Scanner input = new Scanner(System.in);
+        PrintWriter output = new PrintWriter(System.out);
+        game.startGame(input, output);
+
+        // game loop
+        while(true){
+            game.startTurn(input, output, game.activePlayer);
+
+            break;
+        }
     }
 }
 

@@ -324,7 +324,7 @@ class GameTest {
         StringWriter output = new StringWriter();
         testGame.startTurn(input, new PrintWriter(output), testGame.activePlayer);
 
-        assertEquals(testGame.PLAYER_1.hand.toString(), output.toString());
+        assertTrue(output.toString().contains(testGame.PLAYER_1.hand.toString()));
         assertTrue(output.toString().contains("F5, F10, D5, S10, S10, S10, H10, H10, H10, B15, L20, E30"));
     }
 }
