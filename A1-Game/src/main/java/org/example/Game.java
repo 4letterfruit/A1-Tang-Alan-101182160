@@ -63,7 +63,31 @@ public class Game {
         output.flush();
     }
 
+    // draw an event card
+    // identify the event card and its effect
     public void drawEvent(Scanner input, PrintWriter output){
+        output.println("Drawing event...");
+        String event = eventDeck.draw();
+
+        switch (event){
+            case "Q2":
+            case "Q3":
+            case "Q4":
+            case "Q5":
+                output.println("Sponsor a quest: " + event);
+                break;
+
+            case "E-Plague":
+                output.println("E-Plague: Lose 2 shields");
+                break;
+            case "E-Queen's Favor":
+                output.println("E-Queen's Favor: Draw 2 adventure cards");
+                break;
+            case "E-Prosperity":
+                output.println("E-Prosperity: All players draw 2 adventure cards");
+                break;
+        }
+        output.flush();
     }
 
     public void clearScreen(){
@@ -82,6 +106,7 @@ public class Game {
         while(true){
             game.startTurn(input, output, game.activePlayer);
 
+            game.drawEvent(input, output);
             break;
         }
     }
