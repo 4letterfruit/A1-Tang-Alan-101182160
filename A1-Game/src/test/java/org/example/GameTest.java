@@ -357,4 +357,68 @@ class GameTest {
         // Confirm Q2 is drawn and declared
         assertTrue(output.toString().contains("Sponsor a quest: Q2"));
     }
+
+    @Test
+    void RESP_9_TEST_1(){
+        testGame = new Game();
+
+        testGame.initializeDecks();
+        Scanner input = new Scanner("\n");
+        StringWriter output = new StringWriter();
+
+        // test e-plague
+        testGame.PLAYER_1.addShields(2);
+        testGame.eventDeck.swap(12, 16);
+        testGame.drawEvent(input, new PrintWriter(output));
+        assertEquals(0, testGame.PLAYER_1.getShields());
+
+        testGame.initializeDecks();
+        testGame.eventDeck.swap(12, 16);
+        testGame.PLAYER_1.addShields(1);
+        testGame.drawEvent(input, new PrintWriter(output));
+        assertEquals(0, testGame.PLAYER_1.getShields());
+
+        testGame.initializeDecks();
+        testGame.eventDeck.swap(12, 16);
+        testGame.PLAYER_1.addShields(5);
+        testGame.drawEvent(input, new PrintWriter(output));
+        assertEquals(3, testGame.PLAYER_1.getShields());
+
+
+    }
+
+    @Test
+    void RESP_9_TEST_2(){
+        testGame = new Game();
+
+        testGame.initializeDecks();
+        Scanner input = new Scanner("\n");
+        StringWriter output = new StringWriter();
+
+        // test e-queen's favor
+        testGame.eventDeck.swap(13, 16);
+        testGame.drawEvent(input, new PrintWriter(output));
+
+        assertEquals(14, testGame.PLAYER_1.handSize());
+        assertEquals(12, testGame.PLAYER_2.handSize());
+        assertEquals(12, testGame.PLAYER_3.handSize());
+        assertEquals(12, testGame.PLAYER_4.handSize());
+    }
+
+    @Test
+    void RESP_9_TEST_3(){
+        testGame = new Game();
+
+        testGame.initializeDecks();
+        Scanner input = new Scanner("\n");
+        StringWriter output = new StringWriter();
+
+        // test e-prosperity, each player has 12 + 2 cards
+        testGame.drawEvent(input, new PrintWriter(output));
+
+        assertEquals(14, testGame.PLAYER_1.handSize());
+        assertEquals(14, testGame.PLAYER_2.handSize());
+        assertEquals(14, testGame.PLAYER_3.handSize());
+        assertEquals(14, testGame.PLAYER_4.handSize());
+    }
 }

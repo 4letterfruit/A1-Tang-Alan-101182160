@@ -68,4 +68,11 @@ public class Player {
             hand.set(min, temp);
         }
     }
+
+    public void addShields(int gain){
+    }
+
+    public int getShields(){
+        return -1;
+    }
 }
