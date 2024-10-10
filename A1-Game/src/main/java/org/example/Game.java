@@ -105,6 +105,9 @@ public class Game {
         }
     }
 
+    public void trim(Scanner input, PrintWriter output){
+    }
+
     public static void main(String[] args){
         Game game = new Game();
         Scanner input = new Scanner(System.in);

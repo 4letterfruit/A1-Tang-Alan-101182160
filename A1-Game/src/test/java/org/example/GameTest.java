@@ -421,4 +421,43 @@ class GameTest {
         assertEquals(14, testGame.PLAYER_3.handSize());
         assertEquals(14, testGame.PLAYER_4.handSize());
     }
+
+    @Test
+    void RESP_10_TEST_1(){
+        testGame = new Game();
+
+        StringWriter output = new StringWriter();
+
+        // test need to trim, number of cards to delete is printed to output
+        testGame.PLAYER_1.add(testGame.adventureDeck.draw());
+        testGame.PLAYER_1.add(testGame.adventureDeck.draw());
+
+        Scanner input = new Scanner("1\n1\n");
+        testGame.trim(input, new PrintWriter(output));
+        assertTrue(output.toString().contains("2"));
+
+        testGame.PLAYER_1.add(testGame.adventureDeck.draw());
+        testGame.PLAYER_1.add(testGame.adventureDeck.draw());
+        testGame.PLAYER_1.add(testGame.adventureDeck.draw());
+        testGame.PLAYER_1.add(testGame.adventureDeck.draw());
+
+        input = new Scanner("1\n1\n1\n1\n");
+        testGame.trim(input, new PrintWriter(output));
+        assertTrue(output.toString().contains("4"));
+    }
+
+    @Test
+    void RESP_10_TEST_2(){
+        testGame = new Game();
+
+        Scanner input = new Scanner("\n");
+        StringWriter output = new StringWriter();
+
+        // test no need to trim, nothing is printed to output
+        testGame.trim(input, new PrintWriter(output));
+
+        testGame.trim(input, new PrintWriter(output));
+
+        assertTrue(output.toString().isBlank());
+    }
 }
