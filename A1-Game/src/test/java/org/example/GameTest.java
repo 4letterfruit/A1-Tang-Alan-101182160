@@ -436,6 +436,8 @@ class GameTest {
         testGame.trim(input, new PrintWriter(output));
         assertTrue(output.toString().contains("2"));
 
+        testGame = new Game();
+
         testGame.PLAYER_1.add(testGame.adventureDeck.draw());
         testGame.PLAYER_1.add(testGame.adventureDeck.draw());
         testGame.PLAYER_1.add(testGame.adventureDeck.draw());

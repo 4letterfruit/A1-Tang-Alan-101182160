@@ -106,6 +106,11 @@ public class Game {
     }
 
     public void trim(Scanner input, PrintWriter output){
+        if (activePlayer.handSize() > 12){
+            int excess = activePlayer.handSize() - 12;
+            output.println(String.format("Hand size too large, cards to discard: %d", excess));
+            output.flush();
+        }
     }
 
     public static void main(String[] args){
@@ -117,8 +122,9 @@ public class Game {
         // game loop
         while(true){
             game.startTurn(input, output, game.activePlayer);
-
+            game.trim(input, output);
             game.drawEvent(input, output);
+            game.trim(input, output);
             break;
         }
     }
