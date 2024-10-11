@@ -36,6 +36,14 @@ public class Player {
 
     public void add(String item){
         hand.add(item);
+        sortHand();
+    }
+
+    public String remove(int i){
+        if (i < 1 || i > hand.size()){
+            return null;
+        }
+        return hand.remove(i-1);
     }
 
     public int handSize(){

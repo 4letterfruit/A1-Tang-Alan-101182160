@@ -8,6 +8,7 @@ public class Deck {
     // receive a list of cards in form of "Card/Count", separated by commas
     public Deck(String cardString){
         cardList = new ArrayList<String>();
+        discardPile = new ArrayList<String>();
 
         String[] splitString = cardString.split(",");
 
@@ -64,5 +65,9 @@ public class Deck {
     // retrieve the card at the top of the stack
     public String draw(){
         return cardList.removeLast();
+    }
+
+    public void discard(String card){
+        discardPile.add(card);
     }
 }

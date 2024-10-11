@@ -111,6 +111,26 @@ public class Game {
             output.println(String.format("Hand size too large, cards to discard: %d", excess));
             output.flush();
         }
+
+        while (activePlayer.handSize() > 12){
+            output.println("Player Hand: " + activePlayer.hand);
+            output.println(String.format("Remove a card [1 - %d]", activePlayer.handSize()));
+            output.flush();
+
+            int index = 0;
+            try{
+                index = Integer.parseInt(input.nextLine());
+            }catch (Exception e){
+                continue;
+            }
+
+            String removed = activePlayer.remove(index);
+            if (removed == null){
+                continue;
+            }
+
+            adventureDeck.discard(removed);
+        }
     }
 
     public static void main(String[] args){
@@ -118,6 +138,7 @@ public class Game {
         Scanner input = new Scanner(System.in);
         PrintWriter output = new PrintWriter(System.out);
         game.startGame(input, output);
+        game.activePlayer.add(game.adventureDeck.draw());
 
         // game loop
         while(true){

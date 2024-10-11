@@ -480,7 +480,7 @@ class GameTest {
         testGame.trim(input, new PrintWriter(output));
         assertEquals(12, testGame.activePlayer.handSize());
 
-        assertEquals(2, testGame.adventureDeck.discardPile.size());
+        assertEquals(3, testGame.adventureDeck.discardPile.size());
     }
 
     @Test
