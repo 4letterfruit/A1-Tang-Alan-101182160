@@ -511,4 +511,23 @@ class GameTest {
         assertArrayEquals(endArray, testGame.activePlayer.hand.toArray());
 
     }
+
+    @Test
+    void RESP_12_TEST_1(){
+        testGame = new Game();
+
+        // confirm "next player" works
+        assertEquals(testGame.PLAYER_1, testGame.activePlayer);
+        testGame.nextPlayer();
+        assertEquals(testGame.PLAYER_2, testGame.activePlayer);
+    }
+
+    void RESP_12_TEST_2(){
+        testGame = new Game();
+
+        // confirm loops back to player 1
+        testGame.activePlayer = testGame.PLAYER_4;
+        testGame.nextPlayer();
+        assertEquals(testGame.PLAYER_1, testGame.activePlayer);
+    }
 }
