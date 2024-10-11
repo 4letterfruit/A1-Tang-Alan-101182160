@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class Deck {
     ArrayList<String> cardList;
-
+    ArrayList<String> discardPile;
     // receive a list of cards in form of "Card/Count", separated by commas
     public Deck(String cardString){
         cardList = new ArrayList<String>();

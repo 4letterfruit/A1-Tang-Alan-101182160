@@ -462,4 +462,53 @@ class GameTest {
 
         assertTrue(output.toString().isBlank());
     }
+
+    @Test
+    void RESP_11_TEST_1(){
+        testGame = new Game();
+        StringWriter output = new StringWriter();
+
+        // test hand size is correct after trimming
+
+        // test need to trim 2 cards
+        testGame.PLAYER_1.add(testGame.adventureDeck.draw());
+        testGame.PLAYER_1.add(testGame.adventureDeck.draw());
+        testGame.PLAYER_1.add(testGame.adventureDeck.draw());
+
+        assertEquals(15, testGame.activePlayer.handSize());
+        Scanner input = new Scanner("1\n1\n1\n");
+        testGame.trim(input, new PrintWriter(output));
+        assertEquals(12, testGame.activePlayer.handSize());
+
+        assertEquals(2, testGame.adventureDeck.discardPile.size());
+    }
+
+    @Test
+    void RESP_11_TEST_2(){
+        testGame = new Game();
+
+        // reset values to be predictable
+        testGame.initializeDecks();
+        testGame.initializePlayers();
+        testGame.distributeCards();
+
+        StringWriter output = new StringWriter();
+
+        // test  correct cards are being discarded
+        testGame.activePlayer.add(testGame.adventureDeck.draw());
+        testGame.activePlayer.add(testGame.adventureDeck.draw());
+        testGame.activePlayer.add(testGame.adventureDeck.draw());
+        testGame.activePlayer.add(testGame.adventureDeck.draw());
+
+        Scanner input = new Scanner("1\n3\n5\n10\n");
+        testGame.activePlayer.sortHand();
+        System.out.println(testGame.activePlayer.hand);
+
+        String[] testArray = {"F50", "F70", "D5", "D5", "D5", "S10", "S10", "S10", "S10", "H10", "H10", "H10", "B15", "B15", "L20", "E30"};
+        String[] endArray = {"F70", "D5", "D5", "S10", "S10", "S10", "H10", "H10", "H10", "B15", "L20", "E30"};
+        assertArrayEquals(testArray, testGame.activePlayer.hand.toArray());
+        testGame.trim(input, new PrintWriter(output));
+        assertArrayEquals(endArray, testGame.activePlayer.hand.toArray());
+
+    }
 }
