@@ -6,6 +6,7 @@ public class Player {
     int id;
     ArrayList<String> hand;
     int shields;
+    Player nextPlayer;
 
     HashMap<String, Integer> cardValue;
 
@@ -32,6 +33,10 @@ public class Player {
         cardValue.put("L20", 120);
         cardValue.put("E30", 130);
 
+    }
+
+    public void setNextPlayer(Player p){
+        nextPlayer = p;
     }
 
     public void add(String item){

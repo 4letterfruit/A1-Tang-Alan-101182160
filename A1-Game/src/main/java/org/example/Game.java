@@ -31,6 +31,11 @@ public class Game {
         PLAYER_3 = new Player(3);
         PLAYER_4 = new Player(4);
 
+        PLAYER_1.setNextPlayer(PLAYER_2);
+        PLAYER_2.setNextPlayer(PLAYER_3);
+        PLAYER_3.setNextPlayer(PLAYER_4);
+        PLAYER_4.setNextPlayer(PLAYER_1);
+
         activePlayer = PLAYER_1;
     }
 
@@ -133,21 +138,30 @@ public class Game {
         }
     }
 
+    // primarily used for testing.
+    public void nextPlayer(){
+        activePlayer = activePlayer.nextPlayer;
+    }
+
+    public void gameLoop(){
+        Scanner input = new Scanner(System.in);
+        PrintWriter output = new PrintWriter(System.out);
+// game loop
+        while(true){
+            startTurn(input, output, activePlayer);
+            trim(input, output);
+            drawEvent(input, output);
+            trim(input, output);
+            nextPlayer();
+        }
+    }
+
     public static void main(String[] args){
         Game game = new Game();
         Scanner input = new Scanner(System.in);
         PrintWriter output = new PrintWriter(System.out);
         game.startGame(input, output);
-        game.activePlayer.add(game.adventureDeck.draw());
-
-        // game loop
-        while(true){
-            game.startTurn(input, output, game.activePlayer);
-            game.trim(input, output);
-            game.drawEvent(input, output);
-            game.trim(input, output);
-            break;
-        }
+        game.gameLoop();
     }
 }
 
