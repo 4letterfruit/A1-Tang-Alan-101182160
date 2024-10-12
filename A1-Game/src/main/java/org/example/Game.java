@@ -61,8 +61,9 @@ public class Game {
     public void startTurn(Scanner input, PrintWriter output, Player player){
         // clear the screen
         clearScreen();
-        output.println("Active Player: " + activePlayer.id);
+        output.println("Next Active Player: " + activePlayer.id);
         output.flush();
+        input.nextLine();
         activePlayer.sortHand();
         output.println(activePlayer.hand.toString());
         output.flush();
@@ -72,6 +73,8 @@ public class Game {
     // identify the event card and its effect
     public void drawEvent(Scanner input, PrintWriter output){
         output.println("Drawing event...");
+        output.flush();
+        input.nextLine();
         String event = eventDeck.draw();
 
         switch (event){
@@ -102,6 +105,7 @@ public class Game {
                 break;
         }
         output.flush();
+        input.nextLine();
     }
 
     public void clearScreen(){

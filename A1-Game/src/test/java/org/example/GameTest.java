@@ -334,7 +334,7 @@ class GameTest {
 
         testGame.initializeDecks();
 
-        Scanner input = new Scanner("\n");
+        Scanner input = new Scanner("\n\n\n\n\n");
         StringWriter output = new StringWriter();
         testGame.drawEvent(input, new PrintWriter(output));
 
@@ -350,7 +350,7 @@ class GameTest {
         testGame.initializeDecks();
         testGame.eventDeck.swap(0, 16);
 
-        Scanner input = new Scanner("\n");
+        Scanner input = new Scanner("\n\n\n\n\n");
         StringWriter output = new StringWriter();
         testGame.drawEvent(input, new PrintWriter(output));
 
@@ -363,7 +363,7 @@ class GameTest {
         testGame = new Game();
 
         testGame.initializeDecks();
-        Scanner input = new Scanner("\n");
+        Scanner input = new Scanner("\n\n\n\n\n\n\n\n");
         StringWriter output = new StringWriter();
 
         // test e-plague
@@ -392,7 +392,7 @@ class GameTest {
         testGame = new Game();
 
         testGame.initializeDecks();
-        Scanner input = new Scanner("\n");
+        Scanner input = new Scanner("\n\n\n\n");
         StringWriter output = new StringWriter();
 
         // test e-queen's favor
@@ -410,7 +410,7 @@ class GameTest {
         testGame = new Game();
 
         testGame.initializeDecks();
-        Scanner input = new Scanner("\n");
+        Scanner input = new Scanner("\n\n\n\n");
         StringWriter output = new StringWriter();
 
         // test e-prosperity, each player has 12 + 2 cards
