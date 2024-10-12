@@ -522,6 +522,7 @@ class GameTest {
         assertEquals(testGame.PLAYER_2, testGame.activePlayer);
     }
 
+    @Test
     void RESP_12_TEST_2(){
         testGame = new Game();
 
@@ -529,5 +530,35 @@ class GameTest {
         testGame.activePlayer = testGame.PLAYER_4;
         testGame.nextPlayer();
         assertEquals(testGame.PLAYER_1, testGame.activePlayer);
+    }
+
+    @Test
+    void RESP_13_TEST_1(){
+        testGame = new Game();
+        testGame.initializeDecks();
+
+        // set up next event to be drawn = Q2
+        testGame.eventDeck.swap(0, 16);
+
+        // quest is accepted by player 3
+        Scanner input = new Scanner("\nn\nn\ny\n");
+        StringWriter output = new StringWriter();
+        testGame.drawEvent(input, new PrintWriter(output));
+        assertTrue(output.toString().contains("sponsored by Player 3"));
+    }
+
+    @Test
+    void RESP_13_TEST_2(){
+        testGame = new Game();
+        testGame.initializeDecks();
+
+        // set up next event to be drawn = Q2
+        testGame.eventDeck.swap(0, 16);
+
+        // quest is declined by all
+        Scanner input = new Scanner("\nn\nn\nn\nn\n");
+        StringWriter output = new StringWriter();
+        testGame.drawEvent(input, new PrintWriter(output));
+        assertTrue(output.toString().contains("declined. End turn."));
     }
 }
