@@ -136,7 +136,7 @@ public class Game {
         return null;
     }
 
-    public void sponsorQuest(Scanner input, PrintWriter output, String quest, Player player){
+    public ArrayList<ArrayList<String>> sponsorQuest(Scanner input, PrintWriter output, String quest, Player player){
         // fix hand size first
         trim(input, output, player);
 
@@ -146,33 +146,65 @@ public class Game {
         int stageCount = Integer.parseInt(quest.substring(1));
 
         int i = 0;
+        int prevValue = 0;
+        boolean hasFoe = false;
         while(i < stageCount){
             printOverview(output, overview);
-            output.println(String.format("Current stage %d: %s", i+1, stage));
-            output.println(String.format("Select the next card for stage %d", i));
+            output.println(String.format("\nCurrent stage %d: %s", i+1, stage));
+            output.println(String.format("Select the next card for stage %d", i+1));
             output.println(player.hand);
             output.flush();
 
-            try{
-                String in = input.nextLine();
-                if (in.equalsIgnoreCase("quit")){
-                    if (isValidStage(output, stage)){
-                        overview.add(new ArrayList<String>(stage));
-                        stage = new ArrayList<String>();
-                        i++;
-                    }else{
-                        // handle invalid stage
-                    }
+            String in = input.nextLine();
+            if (in.equalsIgnoreCase("quit")){
+                prevValue = isValidStage(output, stage, prevValue, hasFoe);
 
-
+                if (prevValue > 0){
+                    // valid input, start updating next stages
+                    overview.add(new ArrayList<String>(stage));
+                    stage = new ArrayList<String>();
+                    i++;
+                    hasFoe = false;
                     continue;
+                }else{
+                    // quit was input but invalid stage, return null and rerun sponsor from gameloop
+                    // return cards from stage setup to player
+                    for (String s : stage){
+                        player.add(s);
+                    }
+                    for (ArrayList<String> a : overview){
+                        for (String s : a){
+                            player.add(s);
+                        }
+                    }
+                    return null;
                 }
+            }
+            try{
                 int selectIndex = Integer.parseInt(in);
                 String card = player.remove(selectIndex);
                 if (card == null){
                     continue;
                 }
 
+
+                if (card.charAt(0) == 'F'){
+                    // multiple foes is declined, check foe before anything else
+                    if (hasFoe){
+                        output.println("Must have exactly 1 Foe card");
+                        output.flush();
+                        player.add(card);
+                        continue;
+                    }else{
+                        hasFoe = true;
+                    }
+                }else if(stage.contains(card)){
+                    // repeated weapon is declined
+                    output.println("Cannot repeat weapon cards");
+                    output.flush();
+                    player.add(card);
+                    continue;
+                }
 
                 stage.add(card);
             }catch (Exception e){
@@ -182,15 +214,37 @@ public class Game {
 
         output.println("Stages successfully set");
         printOverview(output, overview);
+        return overview;
 
     }
 
-    public boolean isValidStage(PrintWriter output, ArrayList<String> stage){
-        // check number of foes == 1
-        // check unique weapons
-        // check greater than prev stage
+    public int isValidStage(PrintWriter output, ArrayList<String> stage, int prevValue, boolean hasFoe){
+        // check empty
+        if (stage.isEmpty()){
+            output.println("Invalid: A stage cannot be empty");
+            output.flush();
+            return 0;
+        }
 
-        return true;
+        if (!hasFoe){
+            output.println("Invalid: Stage requires a foe card");
+            output.flush();
+            return 0;
+        }
+
+        // go through submitted stage and update checked values
+        int value = 0;
+        for (String s : stage){
+            value += Integer.parseInt(s.substring(1));
+        }
+
+        if (value <= prevValue){
+            output.println("Invalid: Insufficient value for this stage");
+            output.flush();
+            return 0;
+        }
+
+        return value;
     }
 
     public void printOverview(PrintWriter output, ArrayList<ArrayList<String>> overview){
@@ -250,7 +304,12 @@ public class Game {
             if (quest != null){
                 Player sponsor = triggerQuest(input, output, quest);
                 if (sponsor != null){
-                    sponsorQuest(input, output, quest, sponsor);
+                    while(true){
+                        ArrayList<ArrayList<String>> overview = sponsorQuest(input, output, quest, sponsor);
+                        if (overview != null){
+                            break;
+                        }
+                    }
 
                 }
             }
