@@ -553,4 +553,28 @@ class GameTest {
         testGame.triggerQuest(input, new PrintWriter(output), "Q2");
         assertTrue(output.toString().contains("declined. End turn."));
     }
+
+    @Test
+    void RESP_14_TEST_1(){
+        testGame = new Game();
+        testGame.initializePlayers();
+        testGame.initializeDecks();
+
+        testGame.adventureDeck.swap(0, 99);
+        testGame.adventureDeck.swap(20, 95);
+        testGame.distributeCards();
+
+        // set up player 1's hand
+        System.out.println(testGame.PLAYER_1.hand);
+        Scanner input = new Scanner("1\n2\nquit\n1\n1\nquit\n");
+        StringWriter output = new StringWriter();
+
+        testGame.sponsorQuest(input, new PrintWriter(output), "Q2", testGame.PLAYER_1);
+
+        assertTrue(output.toString().contains("Stages successfully set"));
+        assertTrue(output.toString().contains("F5"));
+        assertTrue(output.toString().contains("D5"));
+        assertTrue(output.toString().contains("F15"));
+        assertTrue(output.toString().contains("S10"));
+    }
 }
