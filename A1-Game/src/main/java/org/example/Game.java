@@ -326,7 +326,45 @@ public class Game {
     }
 
     public boolean setAttack(Scanner input, PrintWriter output, ArrayList<String> stage, Player player){
-        return false;
+        clearScreen();
+        output.println(String.format("# Cards in current stage: %d", stage.size()));
+        output.println(String.format("Player %d, would you like to tackle this stage? (Y/N)", player.id));
+        output.flush();
+
+        // first prompt for an attack
+        while(true){
+            String in = input.nextLine();
+            if (in.equalsIgnoreCase("y")){
+                break;
+            }
+            if (in.equalsIgnoreCase("n")){
+                return false;
+            }
+        }
+
+        // set attack
+        ArrayList<String> attack = new ArrayList<String>();
+        while (true){
+            output.println(player.hand);
+            output.println("Select a card for the attack");
+            output.flush();
+            String in = input.nextLine();
+
+            if (in.equalsIgnoreCase("quit")){
+                output.println(String.format("Attacking with %s", attack));
+                output.flush();
+                // resolve attack
+                return false;
+            }
+
+
+            try{
+                String card = player.remove(Integer.parseInt(in));
+                attack.add(card);
+            }catch (Exception e){
+                continue;
+            }
+        }
     }
 
     // primarily used for testing.
