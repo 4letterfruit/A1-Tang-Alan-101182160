@@ -433,7 +433,7 @@ class GameTest {
         testGame.PLAYER_1.add(testGame.adventureDeck.draw());
 
         Scanner input = new Scanner("1\n1\n");
-        testGame.trim(input, new PrintWriter(output));
+        testGame.trim(input, new PrintWriter(output), testGame.activePlayer);
         assertTrue(output.toString().contains("2"));
 
         testGame = new Game();
@@ -444,7 +444,7 @@ class GameTest {
         testGame.PLAYER_1.add(testGame.adventureDeck.draw());
 
         input = new Scanner("1\n1\n1\n1\n");
-        testGame.trim(input, new PrintWriter(output));
+        testGame.trim(input, new PrintWriter(output), testGame.activePlayer);
         assertTrue(output.toString().contains("4"));
     }
 
@@ -456,9 +456,9 @@ class GameTest {
         StringWriter output = new StringWriter();
 
         // test no need to trim, nothing is printed to output
-        testGame.trim(input, new PrintWriter(output));
+        testGame.trim(input, new PrintWriter(output), testGame.activePlayer);
 
-        testGame.trim(input, new PrintWriter(output));
+        testGame.trim(input, new PrintWriter(output), testGame.activePlayer);
 
         assertTrue(output.toString().isBlank());
     }
@@ -477,7 +477,7 @@ class GameTest {
 
         assertEquals(15, testGame.activePlayer.handSize());
         Scanner input = new Scanner("1\n1\n1\n");
-        testGame.trim(input, new PrintWriter(output));
+        testGame.trim(input, new PrintWriter(output), testGame.activePlayer);
         assertEquals(12, testGame.activePlayer.handSize());
 
         assertEquals(3, testGame.adventureDeck.discardPile.size());
@@ -507,7 +507,7 @@ class GameTest {
         String[] testArray = {"F50", "F70", "D5", "D5", "D5", "S10", "S10", "S10", "S10", "H10", "H10", "H10", "B15", "B15", "L20", "E30"};
         String[] endArray = {"F70", "D5", "D5", "S10", "S10", "S10", "H10", "H10", "H10", "B15", "L20", "E30"};
         assertArrayEquals(testArray, testGame.activePlayer.hand.toArray());
-        testGame.trim(input, new PrintWriter(output));
+        testGame.trim(input, new PrintWriter(output), testGame.activePlayer);
         assertArrayEquals(endArray, testGame.activePlayer.hand.toArray());
 
     }

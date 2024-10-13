@@ -111,7 +111,7 @@ public class Game {
         return null;
     }
 
-    public void triggerQuest(Scanner input, PrintWriter output, String quest){
+    public Player triggerQuest(Scanner input, PrintWriter output, String quest){
         Player candidate = activePlayer;
         for (int i = 0; i < 4;){
             clearScreen();
@@ -121,8 +121,8 @@ public class Game {
 
             if (text.equalsIgnoreCase("y")){
                 // sponsor quest
-                sponsorQuest(input, output, quest, candidate);
-                return;
+                output.println(String.format("Quest %s sponsored by Player %d", quest, candidate.id));
+                return candidate;
             }else if (text.equalsIgnoreCase("n")){
                 candidate = candidate.nextPlayer;
                 i++;
@@ -132,10 +132,10 @@ public class Game {
 
         // loop ended
         output.println(String.format("Quest %s declined. End turn.", quest));
+        return null;
     }
 
     public void sponsorQuest(Scanner input, PrintWriter output, String quest, Player player){
-        output.println(String.format("Quest %s sponsored by Player %d", quest, player.id));
     }
 
     public void clearScreen(){
@@ -144,16 +144,16 @@ public class Game {
         }
     }
 
-    public void trim(Scanner input, PrintWriter output){
-        if (activePlayer.handSize() > 12){
-            int excess = activePlayer.handSize() - 12;
+    public void trim(Scanner input, PrintWriter output, Player p){
+        if (p.handSize() > 12){
+            int excess = p.handSize() - 12;
             output.println(String.format("Hand size too large, cards to discard: %d", excess));
             output.flush();
         }
 
-        while (activePlayer.handSize() > 12){
-            output.println("Player Hand: " + activePlayer.hand);
-            output.println(String.format("Remove a card [1 - %d]", activePlayer.handSize()));
+        while (p.handSize() > 12){
+            output.println("Player Hand: " + p.hand);
+            output.println(String.format("Remove a card [1 - %d]", p.handSize()));
             output.flush();
 
             int index = 0;
@@ -163,7 +163,7 @@ public class Game {
                 continue;
             }
 
-            String removed = activePlayer.remove(index);
+            String removed = p.remove(index);
             if (removed == null){
                 continue;
             }
@@ -183,12 +183,16 @@ public class Game {
 // game loop
         while(true){
             startTurn(input, output, activePlayer);
-            trim(input, output);
+            trim(input, output, activePlayer);
             String quest = drawEvent(input, output);
             if (quest != null){
-                triggerQuest(input, output, quest);
+                Player sponsor = triggerQuest(input, output, quest);
+                if (sponsor != null){
+                    sponsorQuest(input, output, quest, sponsor);
+
+                }
             }
-            trim(input, output);
+            trim(input, output, activePlayer);
             nextPlayer();
         }
     }
@@ -201,7 +205,3 @@ public class Game {
         game.gameLoop();
     }
 }
-
-
-
-
