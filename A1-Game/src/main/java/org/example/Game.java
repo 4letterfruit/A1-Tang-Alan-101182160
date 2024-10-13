@@ -1,5 +1,6 @@
 package org.example;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Scanner;
 import java.io.PrintWriter;
 
@@ -248,7 +249,38 @@ public class Game {
     }
 
     public ArrayList<Integer> getEligibleAttackers(Scanner input, PrintWriter output, ArrayList<String> stage, Player sponsor){
-        return null;
+        ArrayList<Integer> eligible = new ArrayList<Integer>();
+
+        int stageValue = 0;
+        for (String s : stage){
+            stageValue += Integer.parseInt(s.substring(1));
+        }
+
+        // check for each player except sponsor
+        Player candidate = sponsor;
+        for (int i = 0; i < 3; i++){
+            candidate = candidate.nextPlayer;
+            HashSet<String> weaponSet = new HashSet<String>();
+            int totalValue = 0;
+            // get the set of weapons
+
+            for (String s : candidate.hand){
+                if (s.charAt(0) != 'F'){
+                    weaponSet.add(s);
+                }
+            }
+
+            // sum the weapon values
+            for (String s : weaponSet){
+                totalValue += Integer.parseInt(s.substring(1));
+            }
+
+            if (totalValue >= stageValue){
+                eligible.add(candidate.id);
+            }
+        }
+
+        return eligible;
     }
 
     public void printOverview(PrintWriter output, ArrayList<ArrayList<String>> overview){
