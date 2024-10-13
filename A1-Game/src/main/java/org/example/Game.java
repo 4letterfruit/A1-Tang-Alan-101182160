@@ -71,7 +71,7 @@ public class Game {
 
     // draw an event card
     // identify the event card and its effect
-    public void drawEvent(Scanner input, PrintWriter output){
+    public String drawEvent(Scanner input, PrintWriter output){
         output.println("Drawing event...");
         output.flush();
         input.nextLine();
@@ -83,7 +83,9 @@ public class Game {
             case "Q4":
             case "Q5":
                 output.println("Sponsor a quest: " + event);
-                break;
+                output.flush();
+                input.nextLine();
+                return event;
 
             case "E-Plague":
                 output.println("E-Plague: Lose 2 shields");
@@ -106,6 +108,34 @@ public class Game {
         }
         output.flush();
         input.nextLine();
+        return null;
+    }
+
+    public void triggerQuest(Scanner input, PrintWriter output, String quest){
+        Player candidate = activePlayer;
+        for (int i = 0; i < 4;){
+            clearScreen();
+            output.println(String.format("Will Player %d sponsor %s? (Y/N)", candidate.id, quest));
+            output.flush();
+            String text = input.nextLine();
+
+            if (text.equalsIgnoreCase("y")){
+                // sponsor quest
+                sponsorQuest(input, output, quest, candidate);
+                return;
+            }else if (text.equalsIgnoreCase("n")){
+                candidate = candidate.nextPlayer;
+                i++;
+            }
+            // else invalid input, redo for current candidate
+        }
+
+        // loop ended
+        output.println(String.format("Quest %s declined. End turn.", quest));
+    }
+
+    public void sponsorQuest(Scanner input, PrintWriter output, String quest, Player player){
+        output.println(String.format("Quest %s sponsored by Player %d", quest, player.id));
     }
 
     public void clearScreen(){
@@ -154,7 +184,10 @@ public class Game {
         while(true){
             startTurn(input, output, activePlayer);
             trim(input, output);
-            drawEvent(input, output);
+            String quest = drawEvent(input, output);
+            if (quest != null){
+                triggerQuest(input, output, quest);
+            }
             trim(input, output);
             nextPlayer();
         }
