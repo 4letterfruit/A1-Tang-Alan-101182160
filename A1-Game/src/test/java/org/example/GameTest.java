@@ -565,7 +565,6 @@ class GameTest {
         testGame.distributeCards();
 
         // set up player 1's hand
-        System.out.println(testGame.PLAYER_1.hand);
         Scanner input = new Scanner("1\n2\nquit\n1\n1\nquit\n");
         StringWriter output = new StringWriter();
 
@@ -576,5 +575,100 @@ class GameTest {
         assertTrue(output.toString().contains("D5"));
         assertTrue(output.toString().contains("F15"));
         assertTrue(output.toString().contains("S10"));
+    }
+
+    @Test
+    void RESP_15_TEST_1(){
+        testGame = new Game();
+        testGame.initializePlayers();
+        testGame.initializeDecks();
+
+        testGame.adventureDeck.swap(0, 99);
+        testGame.adventureDeck.swap(20, 95);
+        testGame.distributeCards();
+
+        // set up player 1's hand
+        // test invalid input (no foes)
+        Scanner input = new Scanner("3\nquit\n1\nquit\n1\nquit\n");
+        StringWriter output = new StringWriter();
+
+        testGame.sponsorQuest(input, new PrintWriter(output), "Q2", testGame.PLAYER_1);
+        assertTrue(output.toString().contains("Stage requires a foe card"));
+    }
+
+    @Test
+    void RESP_15_TEST_2(){
+        testGame = new Game();
+        testGame.initializePlayers();
+        testGame.initializeDecks();
+
+        testGame.adventureDeck.swap(0, 99);
+        testGame.adventureDeck.swap(20, 95);
+        testGame.distributeCards();
+
+        // set up player 1's hand
+        // test invalid input (multiple foes)
+        Scanner input = new Scanner("1\n1\nquit\n1\nquit\n");
+        StringWriter output = new StringWriter();
+
+        testGame.sponsorQuest(input, new PrintWriter(output), "Q2", testGame.PLAYER_1);
+        assertTrue(output.toString().contains("Must have exactly 1 Foe card"));
+    }
+
+    @Test
+    void RESP_15_TEST_3(){
+        testGame = new Game();
+        testGame.initializePlayers();
+        testGame.initializeDecks();
+
+        testGame.adventureDeck.swap(0, 99);
+        testGame.adventureDeck.swap(20, 95);
+        testGame.distributeCards();
+
+        // set up player 1's hand
+        // test invalid input (value < previous stage)
+        Scanner input = new Scanner("2\nquit\n1\nquit\n1\nquit\n1\nquit\n");
+        StringWriter output = new StringWriter();
+
+        testGame.sponsorQuest(input, new PrintWriter(output), "Q2", testGame.PLAYER_1);
+        assertTrue(output.toString().contains("Insufficient value for this stage"));
+    }
+
+    @Test
+    void RESP_15_TEST_4(){
+        testGame = new Game();
+        testGame.initializePlayers();
+        testGame.initializeDecks();
+
+        testGame.adventureDeck.swap(0, 99);
+        testGame.adventureDeck.swap(20, 95);
+        testGame.distributeCards();
+
+        // set up player 1's hand
+        // test invalid input (repeated weapon cards)
+        Scanner input = new Scanner("1\n3\n3\nquit\n1\n5\nquit\n");
+        StringWriter output = new StringWriter();
+
+        testGame.sponsorQuest(input, new PrintWriter(output), "Q2", testGame.PLAYER_1);
+        assertTrue(output.toString().contains("Cannot repeat weapon cards"));
+    }
+
+    @Test
+    void RESP_15_TEST_5(){
+        testGame = new Game();
+        testGame.initializePlayers();
+        testGame.initializeDecks();
+
+        testGame.adventureDeck.swap(0, 99);
+        testGame.adventureDeck.swap(20, 95);
+        testGame.distributeCards();
+
+        // set up player 1's hand
+        // test invalid input (repeated weapon cards)
+        Scanner input = new Scanner("quit\n1\nquit\n1\nquit\n");
+        StringWriter output = new StringWriter();
+
+        testGame.sponsorQuest(input, new PrintWriter(output), "Q2", testGame.PLAYER_1);
+        assertTrue(output.toString().contains("A stage cannot be empty"));
     }
 }
