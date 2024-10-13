@@ -247,6 +247,10 @@ public class Game {
         return value;
     }
 
+    public ArrayList<Integer> getEligibleAttackers(Scanner input, PrintWriter output, ArrayList<String> stage, Player sponsor){
+        return null;
+    }
+
     public void printOverview(PrintWriter output, ArrayList<ArrayList<String>> overview){
         for(int i = 0; i < overview.size(); i++){
             output.println(String.format("Stage %d: %s", i+1, overview.get(i).toString()));

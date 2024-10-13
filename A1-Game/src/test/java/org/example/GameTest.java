@@ -2,6 +2,7 @@ package org.example;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -670,5 +671,37 @@ class GameTest {
 
         testGame.sponsorQuest(input, new PrintWriter(output), "Q2", testGame.PLAYER_1);
         assertTrue(output.toString().contains("A stage cannot be empty"));
+    }
+
+    @Test
+    void RESP_16_TEST_1(){
+        testGame = new Game();
+        testGame.initializePlayers();
+        // not interacting with deck
+
+        Scanner input = new Scanner("\n");
+        StringWriter output = new StringWriter();
+
+        // set up player hands, treat it as though player 1 was sponsoring the quest
+        // Player 2 has 1x F70 and 1x D5 (available weapon power is 5)
+        testGame.PLAYER_2.add("F70");
+        testGame.PLAYER_2.add("D5");
+        // Player 3 has S10 and E30 (available weapon power is 40)
+        testGame.PLAYER_3.add("S10");
+        testGame.PLAYER_3.add("E30");
+        // Player 4 has 6x S10 and 6x H10 (available weapon power is 20)
+        for(int i = 0; i < 6; i++){
+            testGame.PLAYER_4.add("S10");
+            testGame.PLAYER_4.add("H10");
+        }
+
+        // set up as though the current stage has [F20, S10, H10], total value is 40
+        ArrayList<String> stage = new ArrayList<String>();
+        stage.add("F20");
+        stage.add("S10");
+        stage.add("H10");
+        ArrayList<Integer> eligible = testGame.getEligibleAttackers(input, new PrintWriter(output), stage, testGame.PLAYER_1);
+        assertEquals(1, eligible.size());
+        assertTrue(eligible.contains(3));
     }
 }
