@@ -1,4 +1,5 @@
 package org.example;
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.io.PrintWriter;
 
@@ -136,6 +137,67 @@ public class Game {
     }
 
     public void sponsorQuest(Scanner input, PrintWriter output, String quest, Player player){
+        // fix hand size first
+        trim(input, output, player);
+
+        ArrayList<String> stage = new ArrayList<String>();
+        ArrayList<ArrayList<String>> overview = new ArrayList<ArrayList<String>>();
+
+        int stageCount = Integer.parseInt(quest.substring(1));
+
+        int i = 0;
+        while(i < stageCount){
+            printOverview(output, overview);
+            output.println(String.format("Current stage %d: %s", i+1, stage));
+            output.println(String.format("Select the next card for stage %d", i));
+            output.println(player.hand);
+            output.flush();
+
+            try{
+                String in = input.nextLine();
+                if (in.equalsIgnoreCase("quit")){
+                    if (isValidStage(output, stage)){
+                        overview.add(new ArrayList<String>(stage));
+                        stage = new ArrayList<String>();
+                        i++;
+                    }else{
+                        // handle invalid stage
+                    }
+
+
+                    continue;
+                }
+                int selectIndex = Integer.parseInt(in);
+                String card = player.remove(selectIndex);
+                if (card == null){
+                    continue;
+                }
+
+
+                stage.add(card);
+            }catch (Exception e){
+                continue;
+            }
+        }
+
+        output.println("Stages successfully set");
+        printOverview(output, overview);
+
+    }
+
+    public boolean isValidStage(PrintWriter output, ArrayList<String> stage){
+        // check number of foes == 1
+        // check unique weapons
+        // check greater than prev stage
+
+        return true;
+    }
+
+    public void printOverview(PrintWriter output, ArrayList<ArrayList<String>> overview){
+        for(int i = 0; i < overview.size(); i++){
+            output.println(String.format("Stage %d: %s", i+1, overview.get(i).toString()));
+        }
+        output.flush();
     }
 
     public void clearScreen(){
@@ -147,7 +209,7 @@ public class Game {
     public void trim(Scanner input, PrintWriter output, Player p){
         if (p.handSize() > 12){
             int excess = p.handSize() - 12;
-            output.println(String.format("Hand size too large, cards to discard: %d", excess));
+            output.println(String.format("Player %d Hand size too large, cards to discard: %d", p.id, excess));
             output.flush();
         }
 
