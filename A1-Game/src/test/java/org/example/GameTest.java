@@ -704,4 +704,25 @@ class GameTest {
         assertEquals(1, eligible.size());
         assertTrue(eligible.contains(3));
     }
+
+    @Test
+    void RESP_17_TEST_1(){
+        testGame = new Game();
+
+        testGame.initializePlayers();
+        testGame.initializeDecks();
+        testGame.distributeCards();
+
+        Scanner input = new Scanner("y\n1\n1\n5\nquit\n");
+        StringWriter output = new StringWriter();
+
+        // game prompts player 2 to attack. They accept and select D10, S10, H10
+        ArrayList<String> stage = new ArrayList<String>();
+        stage.add("F20");
+        stage.add("S10");
+        stage.add("H10");
+        testGame.setAttack(input, new PrintWriter(output), stage, testGame.PLAYER_2);
+
+        assertTrue(output.toString().contains("Attacking with [D5, S10, H10]"));
+    }
 }

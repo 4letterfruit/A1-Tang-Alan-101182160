@@ -1,4 +1,5 @@
 package org.example;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Scanner;
@@ -322,6 +323,10 @@ public class Game {
 
             adventureDeck.discard(removed);
         }
+    }
+
+    public boolean setAttack(Scanner input, PrintWriter output, ArrayList<String> stage, Player player){
+        return false;
     }
 
     // primarily used for testing.
