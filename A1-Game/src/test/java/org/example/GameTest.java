@@ -725,4 +725,50 @@ class GameTest {
 
         assertTrue(output.toString().contains("Attacking with [D5, S10, H10]"));
     }
+
+    @Test
+    void RESP_18_TEST_1(){
+        testGame = new Game();
+
+        testGame.initializePlayers();
+        testGame.initializeDecks();
+        testGame.distributeCards();
+
+        // test invalid input (repeated weapon)
+        Scanner input = new Scanner("y\n2\n2\nquit\n");
+        StringWriter output = new StringWriter();
+
+        ArrayList<String> stage = new ArrayList<String>();
+        stage.add("F20");
+        stage.add("S10");
+        stage.add("H10");
+        testGame.setAttack(input, new PrintWriter(output), stage, testGame.PLAYER_2);
+
+        assertTrue(output.toString().contains("You may not repeat weapon cards"));
+        assertTrue(output.toString().contains("Attacking with [S10]"));
+    }
+
+    @Test
+    void RESP_18_TEST_2(){
+        testGame = new Game();
+
+        testGame.initializePlayers();
+        testGame.initializeDecks();
+        testGame.adventureDeck.swap(0, 98);
+        testGame.distributeCards();
+        System.out.println(testGame.PLAYER_2.hand);
+
+        // test invalid input (foe card)
+        Scanner input = new Scanner("y\n1\n3\nquit\n");
+        StringWriter output = new StringWriter();
+
+        ArrayList<String> stage = new ArrayList<String>();
+        stage.add("F20");
+        stage.add("S10");
+        stage.add("H10");
+        testGame.setAttack(input, new PrintWriter(output), stage, testGame.PLAYER_2);
+
+        assertTrue(output.toString().contains("You may not use a foe card"));
+        assertTrue(output.toString().contains("Attacking with [S10]"));
+    }
 }
