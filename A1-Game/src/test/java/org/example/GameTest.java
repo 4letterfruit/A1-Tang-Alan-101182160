@@ -867,4 +867,17 @@ class GameTest {
         assertTrue(output.toString().contains("1"));
         assertTrue(output.toString().contains("4"));
     }
+
+    @Test
+    void RESP_22_TEST_1(){
+        testGame = new Game();
+
+        // testgame will run out of cards to draw if it doesn't reshuffle
+        for (int i = 0; i < 200; i++){
+            testGame.adventureDeck.discard(testGame.adventureDeck.draw());
+        }
+
+        // confirm card amounts remain the same
+        assertEquals(52, testGame.adventureDeck.size() + testGame.adventureDeck.discardPile.size());
+    }
 }
