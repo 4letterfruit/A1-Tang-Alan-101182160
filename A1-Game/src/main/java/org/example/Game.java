@@ -335,6 +335,10 @@ public class Game {
 
         return winners;
     }
+
+    public void declareWinners(PrintWriter output, HashSet<Integer> winners){
+
+    }
     public boolean resolveAttack(Scanner input, PrintWriter output, ArrayList<String> stage, ArrayList<String> attack){
         // compute stage value
         int stageValue = 0;

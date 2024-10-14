@@ -851,4 +851,20 @@ class GameTest {
         assertTrue(testGame.checkWinners().contains(1));
         assertTrue(testGame.checkWinners().contains(4));
     }
+
+    @Test
+    void RESP_21_TEST_1(){
+        testGame = new Game();
+
+        testGame.PLAYER_1.addShields(7);
+        testGame.PLAYER_4.addShields(8);
+
+        StringWriter output = new StringWriter();
+        if (testGame.checkWinners().size() > 0){
+            testGame.declareWinners(new PrintWriter(output), testGame.checkWinners());
+        }
+
+        assertTrue(output.toString().contains("1"));
+        assertTrue(output.toString().contains("4"));
+    }
 }
