@@ -64,7 +64,17 @@ public class Deck {
 
     // retrieve the card at the top of the stack
     public String draw(){
+        if (size() == 0){
+            reshuffle();
+        }
         return cardList.removeLast();
+    }
+
+    public void reshuffle(){
+        while (!discardPile.isEmpty()){
+            cardList.add(discardPile.removeLast());
+        }
+        shuffle();
     }
 
     public void discard(String card){
