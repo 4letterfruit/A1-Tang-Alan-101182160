@@ -337,7 +337,13 @@ public class Game {
     }
 
     public void declareWinners(PrintWriter output, HashSet<Integer> winners){
-
+        output.println("The game has ended!");
+        String winnerString = "";
+        for (Integer i : winners){
+            winnerString += String.format("Player %d ", i);
+        }
+        output.println(winnerString + " have won the game!");
+        output.flush();
     }
     public boolean resolveAttack(Scanner input, PrintWriter output, ArrayList<String> stage, ArrayList<String> attack){
         // compute stage value
