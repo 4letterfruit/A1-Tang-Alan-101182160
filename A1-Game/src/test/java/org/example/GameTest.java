@@ -830,4 +830,25 @@ class GameTest {
         // attack with
         assertFalse(testGame.setAttack(input, new PrintWriter(output), stage, testGame.PLAYER_2));
     }
+
+    @Test
+    void RESP_20_TEST_1(){
+        testGame = new Game();
+
+        testGame.PLAYER_1.addShields(6);
+
+        assertEquals(0, testGame.checkWinners().size());
+    }
+
+    @Test
+    void RESP_20_TEST_2(){
+        testGame = new Game();
+
+        testGame.PLAYER_1.addShields(7);
+        testGame.PLAYER_4.addShields(8);
+
+        assertEquals(2, testGame.checkWinners().size());
+        assertTrue(testGame.checkWinners().contains(1));
+        assertTrue(testGame.checkWinners().contains(4));
+    }
 }

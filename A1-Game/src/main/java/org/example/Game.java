@@ -325,6 +325,9 @@ public class Game {
         }
     }
 
+    public HashSet<Integer> checkWinners(){
+        return null;
+    }
     public boolean resolveAttack(Scanner input, PrintWriter output, ArrayList<String> stage, ArrayList<String> attack){
         // compute stage value
         int stageValue = 0;
