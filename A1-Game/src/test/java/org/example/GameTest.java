@@ -756,7 +756,6 @@ class GameTest {
         testGame.initializeDecks();
         testGame.adventureDeck.swap(0, 98);
         testGame.distributeCards();
-        System.out.println(testGame.PLAYER_2.hand);
 
         // test invalid input (foe card)
         Scanner input = new Scanner("y\n1\n3\nquit\n");
@@ -770,5 +769,65 @@ class GameTest {
 
         assertTrue(output.toString().contains("You may not use a foe card"));
         assertTrue(output.toString().contains("Attacking with [S10]"));
+    }
+
+    @Test
+    void RESP_19_TEST_1(){
+        testGame = new Game();
+
+        testGame.initializePlayers();
+        testGame.initializeDecks();
+        testGame.distributeCards();
+
+        // test successful attack
+        Scanner input = new Scanner("y\n1\n1\n4\n6\n8\nquit\n");
+        StringWriter output = new StringWriter();
+
+        ArrayList<String> stage = new ArrayList<String>();
+        stage.add("F20");
+        stage.add("S10");
+        stage.add("H10");
+        // attack with
+        assertTrue(testGame.setAttack(input, new PrintWriter(output), stage, testGame.PLAYER_2));
+    }
+
+    @Test
+    void RESP_19_TEST_2(){
+        testGame = new Game();
+
+        testGame.initializePlayers();
+        testGame.initializeDecks();
+        testGame.distributeCards();
+
+        // test empty (unsuccessful attack)
+        Scanner input = new Scanner("y\nquit\n");
+        StringWriter output = new StringWriter();
+
+        ArrayList<String> stage = new ArrayList<String>();
+        stage.add("F20");
+        stage.add("S10");
+        stage.add("H10");
+        // attack with
+        assertFalse(testGame.setAttack(input, new PrintWriter(output), stage, testGame.PLAYER_2));
+    }
+
+    @Test
+    void RESP_19_TEST_3(){
+        testGame = new Game();
+
+        testGame.initializePlayers();
+        testGame.initializeDecks();
+        testGame.distributeCards();
+
+        // test insufficient attack
+        Scanner input = new Scanner("y\n1\nquit\n");
+        StringWriter output = new StringWriter();
+
+        ArrayList<String> stage = new ArrayList<String>();
+        stage.add("F20");
+        stage.add("S10");
+        stage.add("H10");
+        // attack with
+        assertFalse(testGame.setAttack(input, new PrintWriter(output), stage, testGame.PLAYER_2));
     }
 }

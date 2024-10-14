@@ -325,6 +325,10 @@ public class Game {
         }
     }
 
+    public boolean resolveAttack(Scanner input, PrintWriter output, ArrayList<String> stage, ArrayList<String> attack){
+        return false;
+    }
+
     public boolean setAttack(Scanner input, PrintWriter output, ArrayList<String> stage, Player player){
         clearScreen();
         output.println(String.format("# Cards in current stage: %d", stage.size()));
@@ -354,13 +358,10 @@ public class Game {
                 output.println(String.format("Attacking with %s", attack));
                 output.flush();
                 // resolve attack
-                return false;
+                return resolveAttack(input, output, stage, attack);
             }
 
-
-
             try{
-
                 String card = player.remove(Integer.parseInt(in));
 
                 if (card.charAt(0) == 'F'){
@@ -377,7 +378,6 @@ public class Game {
                     output.flush();
                     continue;
                 }
-
 
                 attack.add(card);
             }catch (Exception e){
