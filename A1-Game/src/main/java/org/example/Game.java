@@ -486,6 +486,7 @@ public class Game {
     }
 
     public void replenishCards(Scanner input, PrintWriter output, Player player, ArrayList<ArrayList<String>> overview){
+        clearScreen();
         for (ArrayList<String> stage : overview){
             for (String s : stage){
                 adventureDeck.discard(s);

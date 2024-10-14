@@ -929,4 +929,251 @@ class GameTest {
 
     }
 
+
+
+    @Test
+    void A_TEST_JP_SCENARIO(){
+        Game testGame = new Game();
+
+        // rigging the input
+        testGame.initializePlayers();
+        testGame.initializeDecks();
+
+        {
+            HashMap<String, Integer> p1Hand = new HashMap<String, Integer>();
+            HashMap<String, Integer> p2Hand = new HashMap<String, Integer>();
+            HashMap<String, Integer> p3Hand = new HashMap<String, Integer>();
+            HashMap<String, Integer> p4Hand = new HashMap<String, Integer>();
+
+            p1Hand.put("F5", 2);
+            p1Hand.put("F15", 2);
+            p1Hand.put("D5", 1);
+            p1Hand.put("S10", 2);
+            p1Hand.put("H10", 2);
+            p1Hand.put("B15", 2);
+            p1Hand.put("L20", 1);
+
+            p2Hand.put("F5", 2);
+            p2Hand.put("F15", 2);
+            p2Hand.put("F40", 1);
+            p2Hand.put("D5", 1);
+            p2Hand.put("S10", 1);
+            p2Hand.put("H10", 2);
+            p2Hand.put("B15", 2);
+            p2Hand.put("E30", 1);
+
+            p3Hand.put("F5", 3);
+            p3Hand.put("F15", 1);
+            p3Hand.put("D5", 1);
+            p3Hand.put("S10", 3);
+            p3Hand.put("H10", 2);
+            p3Hand.put("B15", 1);
+            p3Hand.put("L20", 1);
+
+            p4Hand.put("F5", 1);
+            p4Hand.put("F15", 2);
+            p4Hand.put("F40", 1);
+            p4Hand.put("D5", 2);
+            p4Hand.put("S10", 1);
+            p4Hand.put("H10", 2);
+            p4Hand.put("B15", 1);
+            p4Hand.put("L20", 1);
+            p4Hand.put("E30", 1);
+
+            while (!p1Hand.isEmpty()) {
+                for (int i = 0; i < testGame.adventureDeck.size(); i++) {
+                    if (p1Hand.containsKey(testGame.adventureDeck.cardList.get(i))) {
+                        String card = testGame.adventureDeck.cardList.remove(i);
+                        testGame.PLAYER_1.add(card);
+                        p1Hand.put(card, p1Hand.get(card) - 1);
+                        if (p1Hand.get(card) == 0) {
+                            p1Hand.remove(card);
+                        }
+                    }
+                }
+            }
+
+            while (!p2Hand.isEmpty()) {
+                for (int i = 0; i < testGame.adventureDeck.size(); i++) {
+                    if (p2Hand.containsKey(testGame.adventureDeck.cardList.get(i))) {
+                        String card = testGame.adventureDeck.cardList.remove(i);
+                        testGame.PLAYER_2.add(card);
+                        p2Hand.put(card, p2Hand.get(card) - 1);
+                        if (p2Hand.get(card) == 0) {
+                            p2Hand.remove(card);
+                        }
+                    }
+                }
+            }
+
+            while (!p3Hand.isEmpty()) {
+                for (int i = 0; i < testGame.adventureDeck.size(); i++) {
+                    if (p3Hand.containsKey(testGame.adventureDeck.cardList.get(i))) {
+                        String card = testGame.adventureDeck.cardList.remove(i);
+                        testGame.PLAYER_3.add(card);
+                        p3Hand.put(card, p3Hand.get(card) - 1);
+                        if (p3Hand.get(card) == 0) {
+                            p3Hand.remove(card);
+                        }
+                    }
+                }
+            }
+
+            while (!p4Hand.isEmpty()) {
+                for (int i = 0; i < testGame.adventureDeck.size(); i++) {
+                    if (p4Hand.containsKey(testGame.adventureDeck.cardList.get(i))) {
+                        String card = testGame.adventureDeck.cardList.remove(i);
+                        testGame.PLAYER_4.add(card);
+                        p4Hand.put(card, p4Hand.get(card) - 1);
+                        if (p4Hand.get(card) == 0) {
+                            p4Hand.remove(card);
+                        }
+                    }
+                }
+            }
+
+            // rig for Q4 drawn
+            testGame.eventDeck.swap(7, 16);
+
+
+            // rig quest draws
+            testGame.adventureDeck.swap(testGame.adventureDeck.cardList.size()-1, testGame.adventureDeck.cardList.indexOf("F30"));
+            testGame.adventureDeck.swap(testGame.adventureDeck.cardList.size()-2, testGame.adventureDeck.cardList.indexOf("S10"));
+            testGame.adventureDeck.swap(testGame.adventureDeck.cardList.size()-3, testGame.adventureDeck.cardList.indexOf("B15"));
+
+
+            // stage 2 draws
+            testGame.adventureDeck.swap(testGame.adventureDeck.cardList.size()-4, testGame.adventureDeck.cardList.indexOf("F10"));
+            testGame.adventureDeck.swap(testGame.adventureDeck.cardList.size()-5, testGame.adventureDeck.cardList.indexOf("L20"));
+            testGame.adventureDeck.swap(testGame.adventureDeck.cardList.size()-6, testGame.adventureDeck.cardList.indexOf("L20"));
+
+            // stage 3 draws
+            testGame.adventureDeck.swap(testGame.adventureDeck.cardList.size()-7, testGame.adventureDeck.cardList.indexOf("B15"));
+            testGame.adventureDeck.swap(testGame.adventureDeck.cardList.size()-8, testGame.adventureDeck.cardList.indexOf("S10"));
+
+            // stage 4 draws
+            testGame.adventureDeck.swap(testGame.adventureDeck.cardList.size()-9, testGame.adventureDeck.cardList.indexOf("F30"));
+            testGame.adventureDeck.swap(testGame.adventureDeck.cardList.size()-10, testGame.adventureDeck.cardList.indexOf("L20"));
+        }
+
+        PrintWriter output = new PrintWriter(System.out);
+        String inputString = "";
+
+        // drawing and Player 2 deciding to sponsor Q4
+        inputString+= "\n\n\nn\n";
+        inputString += "y\n";
+
+        // setting stages
+        inputString += "1\n7\nquit\n";
+        inputString += "2\n5\nquit\n";
+        inputString += "2\n3\n4\nquit\n";
+        inputString += "2\n3\nquit\n";
+
+
+        // stage 1
+        String setAttacks = "\n5\n5\nquit\n";
+        setAttacks += "\n\n5\n4\nquit\n";
+        setAttacks += "\n\n4\n6\nquit\n";
+
+        // stage 2
+        setAttacks += "\n\n";
+        setAttacks += "7\n6\nquit\n";
+        setAttacks += "\n\n9\n4\nquit\n";
+        setAttacks += "\n\n6\n6\nquit\n";
+        setAttacks +="\n\n";
+
+        // stage 3
+        setAttacks += "9\n7\n4\nquit\n";
+        setAttacks += "\n\n7\n5\n6\nquit\n\n\n";
+
+        // stage 4
+        setAttacks += "7\n6\n6\n\nquit\n\n\n";
+        setAttacks += "4\n4\n4\n5\nquit\n\n";
+
+
+
+        // game process
+        {
+            inputString = "\n\n\n";
+            testGame.startTurn(new Scanner(inputString), new PrintWriter(output), testGame.activePlayer);
+            testGame.trim(new Scanner(inputString), new PrintWriter(output), testGame.activePlayer);
+            String quest = testGame.drawEvent(new Scanner(inputString), new PrintWriter(output));
+            if (quest != null){
+
+                inputString = "\n\n\nn\ny\n";
+                Player sponsor = testGame.triggerQuest(new Scanner(inputString), new PrintWriter(output), quest);
+                ArrayList<ArrayList<String>> overview = null;
+                if (sponsor != null){
+
+                    inputString = "";
+                    inputString += "1\n7\nquit\n";
+                    inputString += "2\n5\nquit\n";
+                    inputString += "2\n3\n4\nquit\n";
+                    inputString += "2\n3\nquit\n";
+                    while(overview == null){
+                        overview = testGame.sponsorQuest(new Scanner(inputString), new PrintWriter(output), quest, sponsor);
+                    }
+
+                    HashSet<Integer> eligible = new HashSet<Integer>();
+                    HashSet<Integer> ineligible = new HashSet<Integer>();
+                    Player p = sponsor.nextPlayer;
+                    for (int i = 0; i < 3; i++){
+                        eligible.add(p.id);
+                        p = p.nextPlayer;
+                    }
+
+                    // input for attacks
+                    String attackString = "";
+                    attackString = "\ny\n1\n";
+
+                    int stageAttack = 0;
+                    for (ArrayList<String> stage : overview){
+                        stageAttack++;
+                        for (Integer e : eligible){
+                            Player player = testGame.getPlayerById(e);
+
+                            if (!testGame.promptAttack(new Scanner(attackString), new PrintWriter(output), stage.size(), player)){
+                                ineligible.add(e);
+                            }
+
+                        }
+
+                        eligible = testGame.getEligibleAttackers(eligible, ineligible);
+
+                        for (Integer e : eligible){
+                            Player player = testGame.getPlayerById(e);
+                            if(!testGame.setAttack(new Scanner(setAttacks), new PrintWriter(output), stage, player)){
+                                ineligible.add(e);
+                            }
+                            setAttacks = setAttacks.substring(setAttacks.indexOf("quit\n")+6);
+
+                            if ((e == 1) && (stageAttack == 2)){
+                                assertEquals(0, testGame.PLAYER_1.shields);
+                                assertTrue(testGame.PLAYER_1.hand.toString().contains("[F5, F10, F15, F15, F30, H10, B15, B15, L20]"));
+                            }
+                        }
+                        eligible = testGame.getEligibleAttackers(eligible, ineligible);
+
+                    }
+
+                    // anyone still "eligible" won every stage
+                    int reward = Integer.parseInt(quest.substring(1));
+                    for (Integer e : eligible){
+                        testGame.getPlayerById(e).addShields(reward);
+                    }
+
+                    assertEquals(0, testGame.PLAYER_3.shields);
+                    assertTrue(testGame.PLAYER_3.hand.toString().contains("[F5, F5, F15, F30, S10]"));
+                    assertEquals(4, testGame.PLAYER_4.shields);
+                    assertTrue(testGame.PLAYER_4.hand.toString().contains("[F15, F15, F40, L20]"));
+                    new Scanner("\n").nextLine();
+
+                    testGame.replenishCards(new Scanner("1\n1\n1\n1\n\n"), new PrintWriter(output), sponsor, overview);
+                    assertEquals(12, testGame.PLAYER_2.hand.size());
+                }
+            }
+
+        }
+
+    }
 }
