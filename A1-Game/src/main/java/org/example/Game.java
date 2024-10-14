@@ -326,7 +326,20 @@ public class Game {
     }
 
     public boolean resolveAttack(Scanner input, PrintWriter output, ArrayList<String> stage, ArrayList<String> attack){
-        return false;
+        // compute stage value
+        int stageValue = 0;
+        for (String s : stage){
+            stageValue += Integer.parseInt(s.substring(1));
+        }
+
+        // compute attack value
+        int attackValue = 0;
+        for (String s : attack){
+            attackValue += Integer.parseInt(s.substring(1));
+        }
+
+        // return attack >= stage value
+        return attackValue >= stageValue;
     }
 
     public boolean setAttack(Scanner input, PrintWriter output, ArrayList<String> stage, Player player){
