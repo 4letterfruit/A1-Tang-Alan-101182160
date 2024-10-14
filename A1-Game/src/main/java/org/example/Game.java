@@ -464,7 +464,15 @@ public class Game {
     }
 
     public void replenishCards(Scanner input, PrintWriter output, Player player, ArrayList<ArrayList<String>> overview){
+        for (ArrayList<String> stage : overview){
+            for (String s : stage){
+                adventureDeck.discard(s);
+                player.add(adventureDeck.draw());
+            }
+            player.add(adventureDeck.draw());
+        }
 
+        trim(input, output, player);
     }
 
     public Player getPlayerById(int i){
