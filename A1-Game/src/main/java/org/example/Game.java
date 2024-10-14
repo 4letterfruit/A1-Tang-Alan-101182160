@@ -358,8 +358,27 @@ public class Game {
             }
 
 
+
             try{
+
                 String card = player.remove(Integer.parseInt(in));
+
+                if (card.charAt(0) == 'F'){
+                    player.add(card);
+                    output.println("You may not use a foe card");
+                    output.flush();
+                    continue;
+                }
+
+                // repeated weapon card
+                if (attack.contains(card)){
+                    player.add(card);
+                    output.println("You may not repeat weapon cards");
+                    output.flush();
+                    continue;
+                }
+
+
                 attack.add(card);
             }catch (Exception e){
                 continue;
@@ -382,19 +401,31 @@ public class Game {
             String quest = drawEvent(input, output);
             if (quest != null){
                 Player sponsor = triggerQuest(input, output, quest);
+                ArrayList<ArrayList<String>> overview;
                 if (sponsor != null){
                     while(true){
-                        ArrayList<ArrayList<String>> overview = sponsorQuest(input, output, quest, sponsor);
+                        overview = sponsorQuest(input, output, quest, sponsor);
                         if (overview != null){
                             break;
                         }
                     }
+
 
                 }
             }
             trim(input, output, activePlayer);
             nextPlayer();
         }
+    }
+
+    public Player getPlayerById(int i){
+        return switch (i) {
+            case 1 -> PLAYER_1;
+            case 2 -> PLAYER_2;
+            case 3 -> PLAYER_3;
+            case 4 -> PLAYER_4;
+            default -> null;
+        };
     }
 
     public static void main(String[] args){
