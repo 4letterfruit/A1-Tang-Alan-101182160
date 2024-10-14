@@ -338,24 +338,11 @@ public class Game {
 
     public boolean setAttack(Scanner input, PrintWriter output, ArrayList<String> stage, Player player){
         clearScreen();
-        output.println(String.format("# Cards in current stage: %d", stage.size()));
-        output.println(String.format("Player %d, would you like to tackle this stage? (Y/N)", player.id));
+        output.println(String.format("Player %d", player.id));
+        output.println("Cards in this stage: " + stage.size());
         output.flush();
+        input.nextLine();
 
-        // first prompt for an attack
-        while(true){
-            String in = input.nextLine();
-            if (in.equalsIgnoreCase("y")){
-                break;
-            }
-            if (in.equalsIgnoreCase("n")){
-                return false;
-            }
-        }
-
-        // draw if participating
-        player.add(adventureDeck.draw());
-        trim(input, output, player);
         // set attack
         ArrayList<String> attack = new ArrayList<String>();
         while (true){
@@ -411,12 +398,31 @@ public class Game {
     }
 
     public boolean promptAttack(Scanner input, PrintWriter output, int stageSize, Player player){
-        return false;
+        clearScreen();
+        output.println(String.format("Player %d", player.id));
+        output.flush();
+        input.nextLine();
+
+        output.println(String.format("# Cards in current stage: %d", stageSize));
+        output.println(player.hand.toString());
+        output.println(String.format("Player %d, would you like to tackle this stage? (Y/N)", player.id));
+        output.flush();
+
+        // first prompt for an attack
+        while(true){
+            String in = input.nextLine();
+            if (in.equalsIgnoreCase("y")){
+                player.add(adventureDeck.draw());
+                trim(input, output, player);
+                return true;
+            }
+            if (in.equalsIgnoreCase("n")){
+                return false;
+            }
+        }
     }
 
-    public void gameLoop(){
-        Scanner input = new Scanner(System.in);
-        PrintWriter output = new PrintWriter(System.out);
+    public void gameLoop(Scanner input, PrintWriter output){
 // game loop
         while(true){
             startTurn(input, output, activePlayer);
@@ -441,11 +447,21 @@ public class Game {
                         for (Integer e : eligible){
                             Player player = getPlayerById(e);
 
+                            if (!promptAttack(input, output, stage.size(), player)){
+                                ineligible.add(e);
+                            }
+
+                        }
+                        eligible = getEligibleAttackers(eligible, ineligible);
+
+                        for (Integer e : eligible){
+                            Player player = getPlayerById(e);
                             if(!setAttack(input, output, stage, player)){
                                 ineligible.add(e);
                             }
                         }
                         eligible = getEligibleAttackers(eligible, ineligible);
+
                     }
 
                     // anyone still "eligible" won every stage
@@ -453,6 +469,8 @@ public class Game {
                     for (Integer e : eligible){
                         getPlayerById(e).addShields(reward);
                     }
+
+                    input.nextLine();
 
                     replenishCards(input, output, sponsor, overview);
                 }
@@ -494,6 +512,6 @@ public class Game {
         Scanner input = new Scanner(System.in);
         PrintWriter output = new PrintWriter(System.out);
         game.startGame(input, output);
-        game.gameLoop();
+        game.gameLoop(input, output);
     }
 }

@@ -761,7 +761,7 @@ class GameTest {
         System.out.println(output);
 
         assertTrue(output.toString().contains("You may not use a foe card"));
-        assertTrue(output.toString().contains("Attacking with [D5]"));
+        assertTrue(output.toString().contains("Attacking with [S10]"));
     }
 
     @Test
@@ -906,13 +906,13 @@ class GameTest {
     void RESP_24_TEST_1(){
         testGame = new Game();
 
-        Scanner input = new Scanner("n\n");
+        Scanner input = new Scanner("\nn\n");
         StringWriter output = new StringWriter();
 
 
         assertFalse(testGame.promptAttack(input, new PrintWriter(output), 2, testGame.PLAYER_1));
 
-        input = new Scanner("y\n");
+        input = new Scanner("\ny\n1\n");
         assertTrue(testGame.promptAttack(input, new PrintWriter(output), 2, testGame.PLAYER_1));
 
     }
@@ -921,7 +921,7 @@ class GameTest {
     void RESP_24_TEST_2(){
         testGame = new Game();
 
-        Scanner input = new Scanner("y\n");
+        Scanner input = new Scanner("\nn\n1\n");
         StringWriter output = new StringWriter();
 
         testGame.promptAttack(input, new PrintWriter(output), 2, testGame.PLAYER_1);
