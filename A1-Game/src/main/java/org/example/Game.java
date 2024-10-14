@@ -450,7 +450,7 @@ public class Game {
                         getPlayerById(e).addShields(reward);
                     }
 
-//                    replenishCards(sponsor, overview);
+                    replenishCards(input, output, sponsor, overview);
                 }
             }
 
@@ -461,6 +461,10 @@ public class Game {
             trim(input, output, activePlayer);
             nextPlayer();
         }
+    }
+
+    public void replenishCards(Scanner input, PrintWriter output, Player player, ArrayList<ArrayList<String>> overview){
+
     }
 
     public Player getPlayerById(int i){

@@ -1,6 +1,8 @@
 package org.example;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+
+import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -873,5 +875,33 @@ class GameTest {
 
         // confirm card amounts remain the same
         assertEquals(52, testGame.adventureDeck.size() + testGame.adventureDeck.discardPile.size());
+    }
+
+    @Test
+    void RESP_23_TEST_1(){
+        testGame = new Game();
+        testGame.initializePlayers();
+        testGame.initializeDecks();
+
+        testGame.adventureDeck.swap(0, 99);
+        testGame.adventureDeck.swap(20, 95);
+        testGame.distributeCards();
+
+        // set up player 1's hand
+        Scanner input = new Scanner("1\n2\nquit\n1\n1\nquit\n1\n1\n1\n1\n");
+        StringWriter output = new StringWriter();
+
+        ArrayList<ArrayList<String>> overview = testGame.sponsorQuest(input, new PrintWriter(output), "Q2", testGame.PLAYER_1);
+
+        assertEquals(8, testGame.PLAYER_1.handSize());
+
+        testGame.replenishCards(input, new PrintWriter(output), testGame.PLAYER_1, overview);
+
+        assertEquals(6, testGame.adventureDeck.discardPile.size());
+        assertTrue(testGame.adventureDeck.discardPile.contains("F5"));
+        assertTrue(testGame.adventureDeck.discardPile.contains("F15"));
+        assertTrue(testGame.adventureDeck.discardPile.contains("S10"));
+        assertTrue(testGame.adventureDeck.discardPile.contains("D5"));
+        assertEquals(12, testGame.PLAYER_1.handSize());
     }
 }
