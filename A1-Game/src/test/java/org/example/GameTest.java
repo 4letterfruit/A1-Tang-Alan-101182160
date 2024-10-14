@@ -3,6 +3,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Scanner;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -503,7 +504,6 @@ class GameTest {
 
         Scanner input = new Scanner("1\n3\n5\n10\n");
         testGame.activePlayer.sortHand();
-        System.out.println(testGame.activePlayer.hand);
 
         String[] testArray = {"F50", "F70", "D5", "D5", "D5", "S10", "S10", "S10", "S10", "H10", "H10", "H10", "B15", "B15", "L20", "E30"};
         String[] endArray = {"F70", "D5", "D5", "S10", "S10", "S10", "H10", "H10", "H10", "B15", "L20", "E30"};
@@ -676,32 +676,25 @@ class GameTest {
     @Test
     void RESP_16_TEST_1(){
         testGame = new Game();
-        testGame.initializePlayers();
-        // not interacting with deck
 
-        Scanner input = new Scanner("\n");
-        StringWriter output = new StringWriter();
+        HashSet<Integer> eligible = new HashSet<Integer>();
+        // add as though player 1 sponsored the quest
+        Player sponsor = testGame.PLAYER_1;
 
-        // set up player hands, treat it as though player 1 was sponsoring the quest
-        // Player 2 has 1x F70 and 1x D5 (available weapon power is 5)
-        testGame.PLAYER_2.add("F70");
-        testGame.PLAYER_2.add("D5");
-        // Player 3 has S10 and E30 (available weapon power is 40)
-        testGame.PLAYER_3.add("S10");
-        testGame.PLAYER_3.add("E30");
-        // Player 4 has 6x S10 and 6x H10 (available weapon power is 20)
-        for(int i = 0; i < 6; i++){
-            testGame.PLAYER_4.add("S10");
-            testGame.PLAYER_4.add("H10");
+        // below is as the gameloop operates
+        Player p = sponsor.nextPlayer;
+        for (int i = 0; i < 3; i++){
+            eligible.add(p.id);
+            p = p.nextPlayer;
         }
 
-        // set up as though the current stage has [F20, S10, H10], total value is 40
-        ArrayList<String> stage = new ArrayList<String>();
-        stage.add("F20");
-        stage.add("S10");
-        stage.add("H10");
-        ArrayList<Integer> eligible = testGame.getEligibleAttackers(input, new PrintWriter(output), stage, testGame.PLAYER_1);
-        assertEquals(1, eligible.size());
+        HashSet<Integer> ineligible = new HashSet<Integer>();
+        // test as though 4 lost the attack/withdrew from the stage
+        ineligible.add(4);
+        eligible = testGame.getEligibleAttackers(eligible, ineligible);
+
+        assertEquals(2, eligible.size());
+        assertTrue(eligible.contains(2));
         assertTrue(eligible.contains(3));
     }
 
@@ -713,10 +706,10 @@ class GameTest {
         testGame.initializeDecks();
         testGame.distributeCards();
 
-        Scanner input = new Scanner("y\n1\n1\n5\nquit\n");
+        Scanner input = new Scanner("y\n1\n1\n1\n5\nquit\n\n");
         StringWriter output = new StringWriter();
 
-        // game prompts player 2 to attack. They accept and select D10, S10, H10
+        // game prompts player 2 to attack. They accept and select D5, S10, H10
         ArrayList<String> stage = new ArrayList<String>();
         stage.add("F20");
         stage.add("S10");
@@ -735,7 +728,7 @@ class GameTest {
         testGame.distributeCards();
 
         // test invalid input (repeated weapon)
-        Scanner input = new Scanner("y\n2\n2\nquit\n");
+        Scanner input = new Scanner("y\n13\n3\n3\nquit\n\n");
         StringWriter output = new StringWriter();
 
         ArrayList<String> stage = new ArrayList<String>();
@@ -758,7 +751,7 @@ class GameTest {
         testGame.distributeCards();
 
         // test invalid input (foe card)
-        Scanner input = new Scanner("y\n1\n3\nquit\n");
+        Scanner input = new Scanner("y\n13\n1\n3\nquit\n\n");
         StringWriter output = new StringWriter();
 
         ArrayList<String> stage = new ArrayList<String>();
@@ -766,9 +759,10 @@ class GameTest {
         stage.add("S10");
         stage.add("H10");
         testGame.setAttack(input, new PrintWriter(output), stage, testGame.PLAYER_2);
+        System.out.println(output);
 
         assertTrue(output.toString().contains("You may not use a foe card"));
-        assertTrue(output.toString().contains("Attacking with [S10]"));
+        assertTrue(output.toString().contains("Attacking with [D5]"));
     }
 
     @Test
@@ -780,7 +774,7 @@ class GameTest {
         testGame.distributeCards();
 
         // test successful attack
-        Scanner input = new Scanner("y\n1\n1\n4\n6\n8\nquit\n");
+        Scanner input = new Scanner("y\n1\n1\n4\n6\n8\nquit\n\n");
         StringWriter output = new StringWriter();
 
         ArrayList<String> stage = new ArrayList<String>();
@@ -800,7 +794,7 @@ class GameTest {
         testGame.distributeCards();
 
         // test empty (unsuccessful attack)
-        Scanner input = new Scanner("y\nquit\n");
+        Scanner input = new Scanner("y\n1\nquit\n\n");
         StringWriter output = new StringWriter();
 
         ArrayList<String> stage = new ArrayList<String>();
@@ -820,7 +814,7 @@ class GameTest {
         testGame.distributeCards();
 
         // test insufficient attack
-        Scanner input = new Scanner("y\n1\nquit\n");
+        Scanner input = new Scanner("y\n1\nquit\n\n");
         StringWriter output = new StringWriter();
 
         ArrayList<String> stage = new ArrayList<String>();

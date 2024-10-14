@@ -249,36 +249,9 @@ public class Game {
         return value;
     }
 
-    public ArrayList<Integer> getEligibleAttackers(Scanner input, PrintWriter output, ArrayList<String> stage, Player sponsor){
-        ArrayList<Integer> eligible = new ArrayList<Integer>();
-
-        int stageValue = 0;
-        for (String s : stage){
-            stageValue += Integer.parseInt(s.substring(1));
-        }
-
-        // check for each player except sponsor
-        Player candidate = sponsor;
-        for (int i = 0; i < 3; i++){
-            candidate = candidate.nextPlayer;
-            HashSet<String> weaponSet = new HashSet<String>();
-            int totalValue = 0;
-            // get the set of weapons
-
-            for (String s : candidate.hand){
-                if (s.charAt(0) != 'F'){
-                    weaponSet.add(s);
-                }
-            }
-
-            // sum the weapon values
-            for (String s : weaponSet){
-                totalValue += Integer.parseInt(s.substring(1));
-            }
-
-            if (totalValue >= stageValue){
-                eligible.add(candidate.id);
-            }
+    public HashSet<Integer> getEligibleAttackers(HashSet<Integer> eligible, HashSet<Integer> ineligible){
+        for (Integer i : ineligible){
+            eligible.remove(i);
         }
 
         return eligible;
@@ -356,6 +329,7 @@ public class Game {
         int attackValue = 0;
         for (String s : attack){
             attackValue += Integer.parseInt(s.substring(1));
+            adventureDeck.discard(s); // add the card to the discard pile
         }
 
         // return attack >= stage value
@@ -379,10 +353,14 @@ public class Game {
             }
         }
 
+        // draw if participating
+        player.add(adventureDeck.draw());
+        trim(input, output, player);
         // set attack
         ArrayList<String> attack = new ArrayList<String>();
         while (true){
             output.println(player.hand);
+            output.println("Current attack: " + attack);
             output.println("Select a card for the attack");
             output.flush();
             String in = input.nextLine();
@@ -391,7 +369,15 @@ public class Game {
                 output.println(String.format("Attacking with %s", attack));
                 output.flush();
                 // resolve attack
-                return resolveAttack(input, output, stage, attack);
+                boolean result = resolveAttack(input, output, stage, attack);
+                if (result == true){
+                    output.println("Attack succeeded!");
+                }else{
+                    output.println("Attack failed");
+                }
+                output.flush();
+                input.nextLine();
+                return result;
             }
 
             try{
@@ -434,17 +420,43 @@ public class Game {
             String quest = drawEvent(input, output);
             if (quest != null){
                 Player sponsor = triggerQuest(input, output, quest);
-                ArrayList<ArrayList<String>> overview;
+                ArrayList<ArrayList<String>> overview = null;
                 if (sponsor != null){
-                    while(true){
+                    while(overview == null){
                         overview = sponsorQuest(input, output, quest, sponsor);
-                        if (overview != null){
-                            break;
-                        }
                     }
 
+                    HashSet<Integer> eligible = new HashSet<Integer>();
+                    HashSet<Integer> ineligible = new HashSet<Integer>();
+                    Player p = sponsor.nextPlayer;
+                    for (int i = 0; i < 3; i++){
+                        eligible.add(p.id);
+                        p = p.nextPlayer;
+                    }
+                    for (ArrayList<String> stage : overview){
+                        for (Integer e : eligible){
+                            Player player = getPlayerById(e);
 
+                            if(!setAttack(input, output, stage, player)){
+                                ineligible.add(e);
+                            }
+                        }
+                        eligible = getEligibleAttackers(eligible, ineligible);
+                    }
+
+                    // anyone still "eligible" won every stage
+                    int reward = Integer.parseInt(quest.substring(1));
+                    for (Integer e : eligible){
+                        getPlayerById(e).addShields(reward);
+                    }
+
+//                    replenishCards(sponsor, overview);
                 }
+            }
+
+            if (!checkWinners().isEmpty()){
+                declareWinners(output, checkWinners());
+                System.exit(0);
             }
             trim(input, output, activePlayer);
             nextPlayer();
