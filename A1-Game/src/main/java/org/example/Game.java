@@ -326,7 +326,14 @@ public class Game {
     }
 
     public HashSet<Integer> checkWinners(){
-        return null;
+        HashSet<Integer> winners = new HashSet<Integer>();
+
+        if (PLAYER_1.shields >= 7) winners.add(1);
+        if (PLAYER_2.shields >= 7) winners.add(2);
+        if (PLAYER_3.shields >= 7) winners.add(3);
+        if (PLAYER_4.shields >= 7) winners.add(4);
+
+        return winners;
     }
     public boolean resolveAttack(Scanner input, PrintWriter output, ArrayList<String> stage, ArrayList<String> attack){
         // compute stage value
