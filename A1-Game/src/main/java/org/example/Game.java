@@ -118,6 +118,10 @@ public class Game {
         Player candidate = activePlayer;
         for (int i = 0; i < 4;){
             clearScreen();
+            output.println(String.format("Player %d", candidate.id));
+            output.flush();
+            input.nextLine();
+            output.println(candidate.hand.toString());
             output.println(String.format("Will Player %d sponsor %s? (Y/N)", candidate.id, quest));
             output.flush();
             String text = input.nextLine();

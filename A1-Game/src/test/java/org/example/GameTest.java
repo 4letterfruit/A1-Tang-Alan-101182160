@@ -537,7 +537,7 @@ class GameTest {
         testGame = new Game();
 
         // quest is accepted by player 3
-        Scanner input = new Scanner("\nn\nn\ny\n");
+        Scanner input = new Scanner("\nn\n\nn\n\ny\n");
         StringWriter output = new StringWriter();
         testGame.triggerQuest(input, new PrintWriter(output), "Q2");
         assertTrue(output.toString().contains("sponsored by Player 3"));
@@ -548,7 +548,7 @@ class GameTest {
         testGame = new Game();
 
         // quest is declined by all
-        Scanner input = new Scanner("\nn\nn\nn\nn\n");
+        Scanner input = new Scanner("\nn\n\nn\n\nn\n\nn\n");
         StringWriter output = new StringWriter();
         testGame.triggerQuest(input, new PrintWriter(output), "Q2");
         assertTrue(output.toString().contains("declined. End turn."));
@@ -1100,7 +1100,7 @@ class GameTest {
             String quest = testGame.drawEvent(new Scanner(inputString), new PrintWriter(output));
             if (quest != null){
 
-                inputString = "\n\n\nn\ny\n";
+                inputString = "\n\n\nn\n\ny\n\n";
                 Player sponsor = testGame.triggerQuest(new Scanner(inputString), new PrintWriter(output), quest);
                 ArrayList<ArrayList<String>> overview = null;
                 if (sponsor != null){
