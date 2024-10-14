@@ -410,6 +410,10 @@ public class Game {
         activePlayer = activePlayer.nextPlayer;
     }
 
+    public boolean promptAttack(Scanner input, PrintWriter output, int stageSize, Player player){
+        return false;
+    }
+
     public void gameLoop(){
         Scanner input = new Scanner(System.in);
         PrintWriter output = new PrintWriter(System.out);

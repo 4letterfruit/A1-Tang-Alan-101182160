@@ -3,10 +3,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.lang.reflect.Array;
-import java.util.Arrays;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Scanner;
+import java.util.*;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
@@ -904,4 +901,32 @@ class GameTest {
         assertTrue(testGame.adventureDeck.discardPile.contains("D5"));
         assertEquals(12, testGame.PLAYER_1.handSize());
     }
+
+    @Test
+    void RESP_24_TEST_1(){
+        testGame = new Game();
+
+        Scanner input = new Scanner("n\n");
+        StringWriter output = new StringWriter();
+
+
+        assertFalse(testGame.promptAttack(input, new PrintWriter(output), 2, testGame.PLAYER_1));
+
+        input = new Scanner("y\n");
+        assertTrue(testGame.promptAttack(input, new PrintWriter(output), 2, testGame.PLAYER_1));
+
+    }
+
+    @Test
+    void RESP_24_TEST_2(){
+        testGame = new Game();
+
+        Scanner input = new Scanner("y\n");
+        StringWriter output = new StringWriter();
+
+        testGame.promptAttack(input, new PrintWriter(output), 2, testGame.PLAYER_1);
+        assertTrue(output.toString().contains(testGame.PLAYER_1.hand.toString()));
+
+    }
+
 }
