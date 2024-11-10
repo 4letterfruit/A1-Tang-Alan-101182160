@@ -1,8 +1,8 @@
 package org.example;
+
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.lang.reflect.Array;
 import java.util.*;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -1135,7 +1135,6 @@ class GameTest {
                             if (!testGame.promptAttack(new Scanner(attackString), new PrintWriter(output), stage.size(), player)){
                                 ineligible.add(e);
                             }
-
                         }
 
                         eligible = testGame.getEligibleAttackers(eligible, ineligible);

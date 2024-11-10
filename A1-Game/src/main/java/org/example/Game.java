@@ -1,5 +1,5 @@
 package org.example;
-import java.lang.reflect.Array;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Scanner;
@@ -416,7 +416,9 @@ public class Game {
         while(true){
             String in = input.nextLine();
             if (in.equalsIgnoreCase("y")){
-                player.add(adventureDeck.draw());
+                String drawnCard = adventureDeck.draw();
+                output.println(drawnCard + " was drawn");
+                player.add(drawnCard);
                 trim(input, output, player);
                 return true;
             }

@@ -1,6 +1,6 @@
 package org.example;
+
 import java.util.ArrayList;
-import java.util.Random;
 
 public class Deck {
     ArrayList<String> cardList;
