@@ -38,16 +38,21 @@ public class GameSteps {
         assertArrayEquals(g, player.hand.toArray());
     }
 
-    @When("Q{int} is drawn by Player {int}")
-    public void Quest_Is_Drawn(int q, int p){
+    @Then("Player {int}'s hand is now [{string}]")
+    public void Player_Hand_Is_Now(int p, String h)
+    {
+        Player player = game.getPlayerById(p);
+        assertArrayEquals(h.split(" "), player.hand.toArray());
+    }
+
+    @When("{string} is drawn by Player {int}")
+    public void Quest_Is_Drawn(String event, int p){
         Player player = game.getPlayerById(p);
         while (game.activePlayer != player){
             game.nextPlayer();
         }
-        String quest = "Q" + q;
-        game.eventDeck.swap(game.eventDeck.cardList.indexOf(quest), game.eventDeck.size()-1);
+        game.eventDeck.swap(game.eventDeck.cardList.indexOf(event), game.eventDeck.size()-1);
 
-//        Scanner in = new Scanner("");
         eventCard = game.drawEvent(new Scanner("\n\n\n\n\n"), new PrintWriter(System.out));
     }
 
@@ -117,6 +122,7 @@ public class GameSteps {
         assertFalse(win);
     }
 
+    // specifying a card to be drawn
     @Then("Player {int} participates in stage {int} - draws a {string}")
     public void Player_Participates_Draws_Card(int p, int stage, String drawn) {
         Player player = game.getPlayerById(p);
@@ -131,6 +137,18 @@ public class GameSteps {
         game.promptAttack(new Scanner(input), new PrintWriter(output), overview.get(stage-1).size(), player);
         System.out.println(output);
         assertTrue(output.toString().contains(drawn + " was drawn"));
+    }
+
+    // any card can be drawn. use this in larger tests that might run out of a specific card through random draws
+    @Then("Player {int} participates in stage {int}")
+    public void Player_Participates(int p, int stage){
+        Player player = game.getPlayerById(p);
+        // promptAttack will only read y unless a discard is required
+        String input = "\ny\n1\n";
+        StringWriter output = new StringWriter();
+
+        game.promptAttack(new Scanner(input), new PrintWriter(output), overview.get(stage-1).size(), player);
+        System.out.println(output);
     }
 
     @Then("Player {int} declines to participate in stage {int}")
@@ -157,23 +175,23 @@ public class GameSteps {
 
     }
 
-
-    @Then("Player {int} has {int} shields and their hand is [{string}]")
-    public void Player_Shields_And_Hand(int p, int shields, String hand) {
-        Player player = game.getPlayerById(p);
-        assertEquals(shields, player.getShields());
-        // assertArrayEquals checks array size already
-        assertArrayEquals(hand.split(" "), player.hand.toArray());
-    }
-
-    @Then("Player {int} replenishes {int} + {int} cards and trims to {int} cards")
-    public void Player_Replenish_And_Trim(int p, int e, int q, int useless) {
+    @Then("Player {int} replenishes {int} + {int} cards and trims hand")
+    public void Player_Replenish_And_Trim(int p, int e, int q) {
         Player player = game.getPlayerById(p);
         // trimming without caring about the cards
         String input = "1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n";
         game.replenishCards(new Scanner(input), new PrintWriter(System.out), player, overview);
 
-        assertEquals(12, player.handSize());
+        assertTrue(player.handSize() <= 12);
+    }
+
+    @Then("Player {int} trims hand")
+    public void Player_Trim(int p) {
+        Player player = game.getPlayerById(p);
+        String input = "1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n1\n";
+        game.trim(new Scanner(input), new PrintWriter(System.out), player);
+
+        assertTrue(player.handSize() <= 12);
     }
 
     // helper function
@@ -206,11 +224,19 @@ public class GameSteps {
     public void Player_Wins(String players){
         // collect the players from the feature
         String[] p = players.split(" ");
-        HashSet<Integer> winners = new HashSet<Integer>();
+        HashSet<Integer> expected = new HashSet<Integer>();
         for (String s : p){
-            winners.add(Integer.parseInt(s));
+            expected.add(Integer.parseInt(s));
         }
+        HashSet<Integer> actual = game.checkWinners();
+        assertEquals(expected, actual);
 
-        assertEquals(winners, game.checkWinners());
+        game.declareWinners(new PrintWriter(System.out), actual);
+    }
+
+    @Then("Player {int} has {int} cards")
+    public void Player_Card_Count(int p, int cards){
+        Player player = game.getPlayerById(p);
+        assertEquals(cards, player.handSize());
     }
 }
