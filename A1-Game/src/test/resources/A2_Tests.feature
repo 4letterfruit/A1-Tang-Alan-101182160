@@ -183,7 +183,28 @@ Feature: A2_Tests
     And Player 2 builds attack ["E30"] for stage 3 and wins
     And Player 3 builds attack ["E30"] for stage 3 and wins
     And Player 1 replenishes 3 + 3 cards and trims hand
+    # resolution
     And Player 2 has 5 shields
     And Player 3 has 7 shields
     And Player "3" wins
 
+  Scenario: 0_Winner_Quest
+    Given the game has started
+    And Player 1's hand is ["F5 F5 F15 F40 D5 S10 S10 H10 H10 B15 B15 L20"]
+    And Player 2's hand is ["F5 F5 F15 F15 F15 D5 S10 H10 H10 B15 B15 E30"]
+    And Player 3's hand is ["F5 F5 F5 F15 D5 S10 S10 S10 H10 H10 B15 L20"]
+    And Player 4's hand is ["F5 F15 F15 F40 D5 D5 S10 H10 H10 B15 L20 E30"]
+    # draw quest
+    When "Q2" is drawn by Player 1
+    Then Player 1 sponsors the "Q2" and builds "[F15],[F40]"
+    # attack and lose
+    And Player 2 participates in stage 1
+    And Player 3 participates in stage 1
+    And Player 4 participates in stage 1
+    And Player 2 builds attack ["H10"] for stage 1 and loses
+    And Player 3 builds attack ["H10"] for stage 1 and loses
+    And Player 4 builds attack ["H10"] for stage 1 and loses
+    # Replenish trims before returning, settle for asserting hand size before/after
+    And Player 1 has 10 cards
+    And Player 1 replenishes 3 + 3 cards and trims hand
+    And Player 1 has 12 cards
