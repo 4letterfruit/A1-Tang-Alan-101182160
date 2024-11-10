@@ -186,6 +186,7 @@ Feature: A2_Tests
     # resolution
     And Player 2 has 5 shields
     And Player 3 has 7 shields
+    And Player 4 has 4 shields
     And Player "3" wins
 
   Scenario: 0_Winner_Quest
