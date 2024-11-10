@@ -8,6 +8,7 @@ import io.cucumber.java.en.*;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Arrays;
 import java.util.Scanner;
 
@@ -37,8 +38,12 @@ public class GameSteps {
         assertArrayEquals(g, player.hand.toArray());
     }
 
-    @When("Q{int} is drawn")
-    public void Quest_Is_Drawn(int q){
+    @When("Q{int} is drawn by Player {int}")
+    public void Quest_Is_Drawn(int q, int p){
+        Player player = game.getPlayerById(p);
+        while (game.activePlayer != player){
+            game.nextPlayer();
+        }
         String quest = "Q" + q;
         game.eventDeck.swap(game.eventDeck.cardList.indexOf(quest), game.eventDeck.size()-1);
 
@@ -94,23 +99,6 @@ public class GameSteps {
         }
     }
 
-    @Then("Player {int} participates in stage {int} - draws a {string} - discards a {string}")
-    public void Player_Participates_Draws_Discards(int p, int stage, String drawn, String discard){
-        Player player = game.getPlayerById(p);
-        String input = "\ny\n";
-        StringWriter output = new StringWriter();
-
-        // fix drawn card
-        game.adventureDeck.swap(game.adventureDeck.cardList.indexOf(drawn), game.adventureDeck.cardList.size()-1);
-
-        // input to discard
-        input += (player.hand.indexOf(discard)+1) + "\n";
-        game.promptAttack(new Scanner(input), new PrintWriter(output), overview.get(stage).size(), player);
-        System.out.println(output.toString());
-        assertTrue(output.toString().contains(drawn + " was drawn"));
-
-    }
-
     @Then("Player {int} builds attack [{string}] for stage {int} and wins")
     public void Player_Builds_Attack_Win(int p, String attack, int stage){
         boolean win = Player_Build_Attack(p, attack, stage);
@@ -132,7 +120,8 @@ public class GameSteps {
     @Then("Player {int} participates in stage {int} - draws a {string}")
     public void Player_Participates_Draws_Card(int p, int stage, String drawn) {
         Player player = game.getPlayerById(p);
-        String input = "\ny\n";
+        // promptAttack will only read y unless a discard is required
+        String input = "\ny\n1\n";
         StringWriter output = new StringWriter();
 
         // fix drawn card
@@ -144,10 +133,36 @@ public class GameSteps {
         assertTrue(output.toString().contains(drawn + " was drawn"));
     }
 
+    @Then("Player {int} declines to participate in stage {int}")
+    public void Player_Declines(int p, int stage){
+        String input = "\nn\n";
+
+        game.promptAttack(new Scanner(input), new PrintWriter(System.out), overview.get(stage-1).size(), game.getPlayerById(p));
+    }
+
+    @Then("Player {int} participates in stage {int} - draws a {string} - discards a {string}")
+    public void Player_Participates_Draws_Discards(int p, int stage, String drawn, String discard){
+        Player player = game.getPlayerById(p);
+        String input = "\ny\n";
+        StringWriter output = new StringWriter();
+
+        // fix drawn card
+        game.adventureDeck.swap(game.adventureDeck.cardList.indexOf(drawn), game.adventureDeck.cardList.size()-1);
+
+        // input to discard
+        input += (player.hand.indexOf(discard)+1) + "\n";
+        game.promptAttack(new Scanner(input), new PrintWriter(output), overview.get(stage).size(), player);
+        System.out.println(output.toString());
+        assertTrue(output.toString().contains(drawn + " was drawn"));
+
+    }
+
+
     @Then("Player {int} has {int} shields and their hand is [{string}]")
     public void Player_Shields_And_Hand(int p, int shields, String hand) {
         Player player = game.getPlayerById(p);
         assertEquals(shields, player.getShields());
+        // assertArrayEquals checks array size already
         assertArrayEquals(hand.split(" "), player.hand.toArray());
     }
 
@@ -161,7 +176,7 @@ public class GameSteps {
         assertEquals(12, player.handSize());
     }
 
-
+    // helper function
     public boolean Player_Build_Attack(int p, String attack, int stage){
         Player player = game.getPlayerById(p);
 
@@ -180,5 +195,22 @@ public class GameSteps {
         }
 
         return game.setAttack(new Scanner(input), new PrintWriter(System.out), overview.get(stage-1), player);
+    }
+
+    @Then("Player {int} has {int} shields")
+    public void Player_Has_Shields(int p, int shields) {
+        assertEquals(shields, game.getPlayerById(p).shields);
+    }
+
+    @Then("Player {string} wins")
+    public void Player_Wins(String players){
+        // collect the players from the feature
+        String[] p = players.split(" ");
+        HashSet<Integer> winners = new HashSet<Integer>();
+        for (String s : p){
+            winners.add(Integer.parseInt(s));
+        }
+
+        assertEquals(winners, game.checkWinners());
     }
 }

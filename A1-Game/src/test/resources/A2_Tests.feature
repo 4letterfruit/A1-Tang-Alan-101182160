@@ -9,7 +9,7 @@ Feature: A2_Tests
     And Player 3's hand is ["F5 F5 F5 F15 D5 S10 S10 S10 H10 H10 B15 L20"]
     And Player 4's hand is ["F5 F15 F15 F40 D5 D5 S10 H10 H10 B15 L20 E30"]
     # 3
-    When Q4 is drawn
+    When Q4 is drawn by Player 1
     # 4, 5
     Then Player 2 sponsors the "Q4" and builds "[F5 H10],[F15 S10],[F15 D5 B15],[F40 B15]"
     #6
@@ -41,4 +41,69 @@ Feature: A2_Tests
     And Player 3 has 0 shields and their hand is ["F5 F5 F15 F30 S10"]
     And Player 4 has 4 shields and their hand is ["F15 F15 F40 L20"]
     And Player 2 replenishes 9 + 4 cards and trims to 12 cards
+
+  Scenario: 2Winner_Game_2Winner_Quest
+    #1
+#    F15/4,F20/7,F25/7,F30/4,F35/4,F40/2,F50/2,F70/1,D5/0,H10/8,S10/8,B15/8,L20/2,E30/2
+    Given the game has started
+    And Player 1's hand is ["F5 F5 F10 F10 F15 F20 F25 S10 S10 H10 H10 L20"]
+    And Player 2's hand is ["F5 F5 F10 F15 F20 D5 D5 S10 S10 H10 H10 L20"]
+    And Player 3's hand is ["F5 F5 F10 F10 F15 F20 D5 S10 S10 H10 H10 L20"]
+    And Player 4's hand is ["F5 F5 F10 F15 F20 D5 D5 S10 S10 H10 H10 L20"]
+    When Q4 is drawn by Player 1
+    Then Player 1 sponsors the "Q4" and builds "[F10],[F15],[F20],[F25]"
+    #2
+    And Player 2 participates in stage 1 - draws a "S10"
+    And Player 3 participates in stage 1 - draws a "D5"
+    And Player 4 participates in stage 1 - draws a "S10"
+    #2+3
+    And Player 2 builds attack ["S10"] for stage 1 and wins
+    And Player 3 builds attack ["D5"] for stage 1 and loses
+    And Player 4 builds attack ["S10"] for stage 1 and wins
+    #4
+    And Player 2 participates in stage 2 - draws a "S10"
+    And Player 4 participates in stage 2 - draws a "S10"
+    And Player 2 builds attack ["S10 D5"] for stage 2 and wins
+    And Player 4 builds attack ["S10 D5"] for stage 2 and wins
+
+    And Player 2 participates in stage 3 - draws a "S10"
+    And Player 4 participates in stage 3 - draws a "S10"
+    And Player 2 builds attack ["S10 H10"] for stage 3 and wins
+    And Player 4 builds attack ["S10 H10"] for stage 3 and wins
+
+    And Player 2 participates in stage 4 - draws a "H10"
+    And Player 4 participates in stage 4 - draws a "H10"
+    #5 shields awarded on last stage's win
+    And Player 2 builds attack ["L20 H10"] for stage 4 and wins
+    And Player 4 builds attack ["L20 H10"] for stage 4 and wins
+    And Player 1 replenishes 4 + 4 cards and trims to 12 cards
+
+    #6
+    And Q3 is drawn by Player 2
+    And Player 3 sponsors the "Q3" and builds "[F5],[F10],[F15]"
+    #7
+    And Player 1 declines to participate in stage 1
+    #8
+    And Player 2 participates in stage 1 - draws a "S10"
+    And Player 4 participates in stage 1 - draws a "S10"
+    And Player 2 builds attack ["D5"] for stage 1 and wins
+    And Player 4 builds attack ["D5"] for stage 1 and wins
+
+    And Player 2 participates in stage 2 - draws a "B15"
+    And Player 4 participates in stage 2 - draws a "B15"
+    And Player 2 builds attack ["H10"] for stage 2 and wins
+    And Player 4 builds attack ["H10"] for stage 2 and wins
+
+    And Player 2 participates in stage 3 - draws a "B15"
+    And Player 4 participates in stage 3 - draws a "B15"
+    And Player 2 builds attack ["B15"] for stage 3 and wins
+    And Player 4 builds attack ["B15"] for stage 3 and wins
+
+    # tracking as 4+3 shields
+    And Player 2 has 7 shields
+    And Player 4 has 7 shields
+    And Player "2 4" wins
+
+
+
 
