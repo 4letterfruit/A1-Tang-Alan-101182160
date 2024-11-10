@@ -208,4 +208,12 @@ Feature: A2_Tests
     # Replenish trims before returning, settle for asserting hand size before/after
     And Player 1 has 10 cards
     And Player 1 replenishes 3 + 3 cards and trims hand
+    And Player 1 has 0 shields
+    And Player 2 has 0 shields
+    And Player 3 has 0 shields
+    And Player 4 has 0 shields
     And Player 1 has 12 cards
+    And Player 2 has 11 cards
+    And Player 3 has 11 cards
+    And Player 4 has 11 cards
+
