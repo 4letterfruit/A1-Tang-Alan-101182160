@@ -163,28 +163,24 @@ public class Game {
 
             String in = input.nextLine();
             if (in.equalsIgnoreCase("quit")){
-                prevValue = isValidStage(output, stage, prevValue, hasFoe);
+                int stageValue = isValidStage(output, stage, prevValue, hasFoe);
 
-                if (prevValue > 0){
+                if (stageValue > 0){
                     // valid input, start updating next stages
+                    prevValue = stageValue;
                     overview.add(new ArrayList<String>(stage));
                     stage = new ArrayList<String>();
                     i++;
-                    hasFoe = false;
-                    continue;
                 }else{
-                    // quit was input but invalid stage, return null and rerun sponsor from gameloop
+                    // quit was input but invalid stage, reset the cards for the current stage
                     // return cards from stage setup to player
-                    for (String s : stage){
-                        player.add(s);
+                    while (!stage.isEmpty()){
+                        player.add(stage.removeLast());
                     }
-                    for (ArrayList<String> a : overview){
-                        for (String s : a){
-                            player.add(s);
-                        }
-                    }
-                    return null;
+                    stage = new ArrayList<String>();
                 }
+                hasFoe = false;
+                continue;
             }
             try{
                 int selectIndex = Integer.parseInt(in);
@@ -192,7 +188,6 @@ public class Game {
                 if (card == null){
                     continue;
                 }
-
 
                 if (card.charAt(0) == 'F'){
                     // multiple foes is declined, check foe before anything else
