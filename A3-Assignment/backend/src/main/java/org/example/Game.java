@@ -1,9 +1,6 @@
 package org.example;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -30,20 +27,35 @@ public class Game {
         distributeCards();
     }
 
-    @GetMapping("/test")
-    public String test(){
-        System.out.println("test called");
-        return "test called";
+    @GetMapping("/start")
+    public String start(){
+        initializeDecks();
+        initializePlayers();
+
+        adventureDeck.shuffle();
+        eventDeck.shuffle();
+
+        distributeCards();
+        // returning format P1-handsize P1-shields P2-handsize P2-shields P3-handsize P3-shields P4-handsize P4-shields
+        return currentScoreboard();
     }
 
-    @GetMapping("/start")
-    public String startGame() {
-        return "yaye";
+    public String currentScoreboard(){
+        return String.format("%d %d %d %d %d %d %d %d",
+                PLAYER_1.handSize(), PLAYER_1.getShields(), PLAYER_2.handSize(), PLAYER_2.getShields(),
+                PLAYER_3.handSize(), PLAYER_3.getShields(), PLAYER_4.handSize(), PLAYER_4.getShields());
     }
 
     public void initializeDecks(){
         adventureDeck = new Deck("F5/8,F10/7,F15/8,F20/7,F25/7,F30/4,F35/4,F40/2,F50/2,F70/1,D5/6,H10/12,S10/16,B15/8,L20/6,E30/2");
         eventDeck = new Deck("Q2/3,Q3/4,Q4/3,Q5/2,E-Plague/1,E-Queen's Favor/2,E-Prosperity/2");
+    }
+
+    @GetMapping("getHand")
+    public String getPlayerHand(@RequestParam String p){
+        Player player = getPlayerById(Integer.parseInt(p));
+
+        return player.hand.toString().substring(1,player.hand.toString().length()-1);
     }
 
     public void initializePlayers(){

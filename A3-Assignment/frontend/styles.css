@@ -1,0 +1,17 @@
+#scoreboard{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    max-top: 2%;
+    max-right: 2%;
+}
+
+.score-detail{
+    display: inline;
+}
+
+.output{
+    text-align: center;
+    max-top: 50%;
+    top: 100px;
+}
