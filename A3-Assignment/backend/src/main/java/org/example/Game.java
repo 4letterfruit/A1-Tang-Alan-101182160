@@ -2,7 +2,9 @@ package org.example;
 
 import org.springframework.web.bind.annotation.*;
 
+import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Scanner;
 import java.io.PrintWriter;
@@ -10,6 +12,7 @@ import java.io.PrintWriter;
 @RestController
 @CrossOrigin(origins = "http://127.0.0.1:8081")
 public class Game {
+    ArrayList<ArrayList<String>> webOverview = new ArrayList<ArrayList<String>>();
     Deck adventureDeck = null;
     Deck eventDeck = null;
 
@@ -233,7 +236,7 @@ public class Game {
                     }else{
                         hasFoe = true;
                     }
-                }else if(stage.contains(card)){
+                }else if (stage.contains(card)){
                     // repeated weapon is declined
                     output.println("Cannot repeat weapon cards");
                     output.flush();
@@ -250,7 +253,35 @@ public class Game {
         output.println("Stages successfully set");
         printOverview(output, overview);
         return overview;
+    }
 
+    @PostMapping("/createStage")
+    public String createStage(String p, String cardString, String prevValString, boolean hasFoe){
+        Player player = getPlayerById(Integer.parseInt(p));
+        String[] cardArray = cardString.split(",");
+        ArrayList<String> stageList = new ArrayList<>(Arrays.asList(cardArray));
+        StringWriter output = new StringWriter();
+
+        switch(isValidStage(new PrintWriter(output), stageList, Integer.parseInt(prevValString), hasFoe))
+        {
+            case -1:
+                return "";
+            case -2:
+                return "";
+            case -3:
+                return "";
+            default:
+                return "";
+                // if successful, start removing cards from player hand and adding to webOverview
+        }
+    }
+
+    @PostMapping("/AwardShields")
+    public String awardShields(String p, String shields) {
+        Player player = getPlayerById(Integer.parseInt(p));
+        player.addShields(Integer.parseInt(shields));
+
+        return "0";
     }
 
     public int isValidStage(PrintWriter output, ArrayList<String> stage, int prevValue, boolean hasFoe){
@@ -258,13 +289,13 @@ public class Game {
         if (stage.isEmpty()){
             output.println("Invalid: A stage cannot be empty");
             output.flush();
-            return 0;
+            return -1;
         }
 
         if (!hasFoe){
             output.println("Invalid: Stage requires a foe card");
             output.flush();
-            return 0;
+            return -2;
         }
 
         // go through submitted stage and update checked values
@@ -276,7 +307,7 @@ public class Game {
         if (value <= prevValue){
             output.println("Invalid: Insufficient value for this stage");
             output.flush();
-            return 0;
+            return -3;
         }
 
         return value;
@@ -491,7 +522,7 @@ public class Game {
 
                         for (Integer e : eligible){
                             Player player = getPlayerById(e);
-                            if(!setAttack(input, output, stage, player)){
+                            if (!setAttack(input, output, stage, player)){
                                 ineligible.add(e);
                             }
                         }
