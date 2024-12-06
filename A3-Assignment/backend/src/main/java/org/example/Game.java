@@ -66,7 +66,7 @@ public class Game {
 
     public void initializeDecks(){
         adventureDeck = new Deck("F5/8,F10/7,F15/8,F20/7,F25/7,F30/4,F35/4,F40/2,F50/2,F70/1,D5/6,H10/12,S10/16,B15/8,L20/6,E30/2");
-        eventDeck = new Deck("Q2/3"); //"Q2/3,Q3/4,Q4/3,Q5/2,E-Plague/1,E-Queen's Favor/2,E-Prosperity/2"
+        eventDeck = new Deck("Q1/3"); //"Q2/3,Q3/4,Q4/3,Q5/2,E-Plague/1,E-Queen's Favor/2,E-Prosperity/2"
     }
 
     @GetMapping("/getHand")
@@ -288,6 +288,71 @@ public class Game {
         webOverview.add(cardList);
 
         return "";
+    }
+
+    @PostMapping("/draw")
+    public String drawPlayer(@RequestParam String p) {
+        Player player = getPlayerById(Integer.parseInt(p));
+        player.add(adventureDeck.draw());
+
+        return "" + player.handSize();
+    }
+
+    @PostMapping("/submitAttack")
+    public String webSubmitAttack(@RequestParam String p, @RequestParam String c, @RequestParam String i) {
+        if (c.isEmpty()) {
+            return "fail";
+        }
+        Player player = getPlayerById(Integer.parseInt(p));
+        Integer index = Integer.parseInt(i)-1;
+        ArrayList<String> attack = new ArrayList<>(Arrays.asList(c.split(" ")));
+
+        boolean result = resolveAttack(new Scanner("\n\n\n"), new PrintWriter(System.out), webOverview.get(index), attack);
+        for (String card : attack) {
+            player.remove(card);
+        }
+        System.out.println(webOverview.get(index));
+        System.out.println("vs");
+        System.out.println(attack);
+        if(result) {
+            return "success";
+        } else {
+            return "fail";
+        }
+    }
+
+    @PostMapping("/awardShields")
+    public void webAwardShields(@RequestParam String plist, @RequestParam String s) {
+        if (plist.equalsIgnoreCase("none") || s.equalsIgnoreCase("none")) {
+            return;
+        }
+        String[] players = plist.split(" ");
+        int shields = Integer.parseInt(s);
+
+        for (String p : players) {
+            Player player = getPlayerById(Integer.parseInt(p));
+            player.addShields(shields);
+        }
+    }
+
+    @PostMapping("/replenish")
+    public String webReplenish(@RequestParam String p) {
+        Player player = getPlayerById(Integer.parseInt(p));
+
+        replenishCards(new Scanner("\n\n\n"), new PrintWriter(System.out), player, webOverview);
+
+        webOverview = new ArrayList<ArrayList<String>>();
+        return "" + player.handSize();
+    }
+
+    @GetMapping("/winners")
+    public String webWinners() {
+        HashSet<Integer> winners = checkWinners();
+        if (winners.isEmpty()) {
+            return "0";
+        } else {
+            return winners.toString();
+        }
     }
 
     @PostMapping("/createStage")
@@ -596,7 +661,7 @@ public class Game {
             player.add(adventureDeck.draw());
         }
 
-        trim(input, output, player);
+//        trim(input, output, player);
     }
 
     public Player getPlayerById(int i){

@@ -5,6 +5,7 @@ let eventPlayer = 1;
 let mainText;
 let handDisplay;
 let promptSpace;
+let questSponsor = 0;
 
 function nextPlayer(p) {
     return (p%4) + 1;
@@ -53,7 +54,8 @@ async function promptPlayer(player, nextAction) {
     nextButton.classList.add("next");
     nextButton.innerHTML = "Continue";
 
-    let cards = countCards(player);
+    let array = await getHandArray(player);
+    let cards = array.length;
 
     if (cards > 12) {
         nextButton.setAttribute("onclick", `trim(${player}, '${nextAction}')`);
@@ -92,9 +94,7 @@ async function drawEvent(player) {
             button.setAttribute("onclick", `promptQuest(${player}, ${size})`);
             button.classList.add("next");
             promptSpace.appendChild(button);
-
     }
-
 }
 
 function makeActionButton() {
@@ -114,7 +114,8 @@ async function doEvent() {
 
     // button to prompt next player
     let button = makeActionButton();
-    let cards = countCards(eventPlayer);
+    let arr = await getHandArray(eventPlayer);
+    let cards = arr.length;
     let temp = eventPlayer;
     eventPlayer = nextPlayer(parseInt(eventPlayer));
 
@@ -128,13 +129,6 @@ async function doEvent() {
     document.getElementById("promptSpace").appendChild(button);
 
 
-}
-
-function countCards(player) {
-    let classString = ".player-score.player-"+player;
-    let playerDiv = document.querySelectorAll(classString)[0]; // only one such element
-    let cards = parseInt(playerDiv.querySelectorAll(".card-count")[0].innerHTML);
-    return cards;
 }
 
 async function trim(player, nextAction) {
@@ -177,16 +171,20 @@ async function doTrim(player, nextAction) {
         trimString = trimString + element.innerHTML + " ";
     });
     trimString = trimString.substring(0, trimString.length-1);
+    try{
+        let r = await fetch(`${apiBaseUrl}/trim?p=${player}&s=${trimString}`, {
+            method: 'POST'
+        });
+        // update scoreboard
+        await updateScoreboard();
+        deleteButtons();
+        mainText.innerHTML = " ";
 
-    let r = await fetch(`${apiBaseUrl}/trim?p=${player}&s=${trimString}`, {
-        method: 'POST'
-    });
-    // update scoreboard
-    await updateScoreboard();
-    deleteButtons();
-    mainText.innerHTML = " ";
+        eval(nextAction);
+    } catch (e) {
+        console.error(e);
+    }
 
-    eval(nextAction);
 }
 
 async function promptQuest(player, size) {
@@ -219,8 +217,8 @@ async function promptQuest(player, size) {
 
     // if last player, no has onclick = promptPlayer(nextPlayer, drawEvent(nextPlayer))
     if (np == eventPlayer) {
-        let next = nextPlayer (eventPlayer);
-        noButton.setAttribute("onclick", `promptPlayer(${next}, 'drawEvent(${next})')`);
+        eventPlayer = nextPlayer (eventPlayer);
+        noButton.setAttribute("onclick", `promptPlayer(${eventPlayer}, 'drawEvent(${eventPlayer})')`);
     }
 
     promptSpace.appendChild(yesButton);
@@ -244,13 +242,19 @@ async function sponsor(player, size) {
     let np = nextPlayer(player);
     eligible.innerHTML = "Eligible Attackers: ";
     eligible.classList.add("temp");
+    eligible.setAttribute("id", "eligible-list");
+    let q = ""
     while (np != player) {
+        q += np;
         eligible.innerHTML += np + " "
         eligible.classList.add(np);
         np = nextPlayer(np);
     }
+    eligible.setAttribute("participants", q);
+
     stageDisplay.appendChild(eligible);
-     startCreateStage (player, 0, 1, size)
+    questSponsor = player;
+    startCreateStage (player, 0, 1, size)
 }
 
 async function startCreateStage(player, prevValue, currentStage, totalStages) {
@@ -268,7 +272,7 @@ async function startCreateStage(player, prevValue, currentStage, totalStages) {
             stage.innerHTML = "Stage size: " + stage.getAttribute("size");
         });
 
-        return promptPlayer(np, `promptAttack(${np}, 1)`);
+        return promptPlayer(np, `promptAttack(${np}, 1, ${totalStages})`);
     }
 
     // else
@@ -335,10 +339,13 @@ async function submitStage(player, prevValue, currentStage, totalStages) {
         method: 'POST'
     });
 
+    await updateScoreboard();
+
     // add cards to a stage display
     let stageBlock = document.createElement("p");
     stageBlock.innerHTML = cardString;
     stageBlock.classList.add("stage");
+    stageBlock.classList.add("temp");
     stageBlock.setAttribute("size", query.length);
     stageDisplay.appendChild(stageBlock);
 
@@ -346,63 +353,262 @@ async function submitStage(player, prevValue, currentStage, totalStages) {
     startCreateStage(player, sum, currentStage+1, totalStages);
 }
 
-async function promptAttack(player, stageIndex) {
+async function promptAttack(player, stageIndex, totalStages) {
     // remove relevant buttons
-    // if stageIndex >= stage count (from DOM) then resolveQuest()
+    deleteButtons();
+
+    // if stageIndex > stage count, resolveQuest()
+    if (stageIndex > totalStages) {
+        return resolveQuest(totalStages);
+    }
+
+    // prompt player
+    mainText.innerHTML = "Would you like to attack stage " + stageIndex + "?";
 
     // request and display player hand
-    // create a button, onclick=doAttack(player, stageIndex)
-    // create a button, onclick=refuse(player, stageIndex)
-    // the quest board will show how many cards are on the stage
+    let handArray = await getHandArray(player);
+    handArray.forEach((card) => {
+        let button = makeActionButton();
+        button.innerHTML = card;
+        button.classList.add(card.charAt(0));
+
+        handDisplay.appendChild(button);
+    });
+    disableButtonClass(".F");
+
+    // create a button, onclick=startAttack(player, stageIndex, totalStages)
+    yesButton = makeActionButton();
+    yesButton.innerHTML = "yes";
+    yesButton.setAttribute("onclick", `startAttack(${player}, ${stageIndex}, ${totalStages})`);
+    promptSpace.appendChild(yesButton);
+
+    // create a button, onclick=refuse(player, stageIndex, totalStages)
+    noButton = makeActionButton();
+    noButton.innerHTML = "no";
+    noButton.setAttribute("onclick", `refuse(${player}, ${stageIndex}, ${totalStages})`);
+    promptSpace.appendChild(noButton);
 }
 
-async function refuse(player, stageIndex) {
+async function refuse(player, stageIndex, totalStages) {
     // remove relevant buttons
+    deleteButtons();
     // remove player from the eligible attackers in the DOM
-    //
-    // if next player loops to front of queue, then stageIndex++
-    // promptPlayer(nextPlayer, promptAttack(nextPlayer, stageIndex))
+    let eligible = document.getElementById("eligible-list");
+    eligible.classList.remove(player);
+    eligible.innerHTML = "Eligible Attackers: ";
+    eligible.classList.forEach((p) => {
+        if (p != "temp") {
+            eligible.innerHTML += p + " ";
+        }
+    })
+
+    // if this is the last player in the participants, then stageIndex++
+    let participants = eligible.getAttribute("participants");
+    let np;
+    if (participants.charAt(participants.length-1) == player) {
+        // if this is the only player in the participants, resolve quest
+        if (participants.length == 1) {
+            eligible.setAttribute("participants", "");
+            return resolveQuest(totalStages);
+        } else {
+            eligible.setAttribute("participants", participants.substring(0, participants.length-1));
+        }
+
+        // go to head of the participants
+        np = participants.charAt(0);
+        stageIndex++;
+    } else {
+        // there are more players
+        // get the index of the player, delete it, so next player is at current index
+        np = participants.indexOf(player);
+
+        participants = participants.substring(0, np) + participants.substring(np+1);
+        eligible.setAttribute("participants", participants);
+        np = participants.charAt(np);
+    }
+
+    console.log(np);
+    if (stageIndex > totalStages) {
+        resolveQuest(totalStages);
+    } else {
+        promptPlayer(np, `promptAttack(${np}, ${stageIndex}, ${totalStages})`);
+    }
 }
 
-async function startAttack(player, stageIndex) {
+async function startAttack(player, stageIndex, totalStages) {
     // delete relevant buttons
+    deleteButtons();
+
     // draw a card for the player
+    let response = await fetch(`${apiBaseUrl}/draw?p=${player}`, {
+            method: 'POST'
+        });
+    let handSize = await response.text();
+    await updateScoreboard();
+
     // trim if needed nextAction -> doAttack
-
+    if (handSize > 12){
+        trim(player, `doAttack(${player}, ${stageIndex}, ${totalStages})`);
+    } else {
+        doAttack(player, stageIndex, totalStages);
+    }
 }
 
-async function doAttack(player, stageIndex) {
+async function doAttack(player, stageIndex, totalStages) {
     // delete relevant buttons
+    deleteButtons();
+
+    mainText.innerHTML = "Select your weapons"
+
     // retrieve cards for player and display as buttons
-    // buttons have a tag with type (foe/weapon), foe buttons should be disabled, weapons should disable other weapons on click
-    // create a submit button that triggers submitAttack(player)
+    handArray = await getHandArray(player);
+    handArray.forEach((card) => {
+        let button = makeActionButton();
+        button.innerHTML = card;
+        button.setAttribute("onclick", "selectButtonClass(this)");
+        button.classList.add(card.charAt(0));
+        handDisplay.appendChild(button);
+        button.setAttribute("item-type", card.charAt(0));
+    });
+    disableButtonClass(".F");
+
+    // create a submit button that triggers submitAttack(player, stageIndex, totalStages)
+    let button = makeActionButton();
+    button.setAttribute("onclick", `submitAttack(${player}, ${stageIndex}, ${totalStages})`);
+    promptSpace.appendChild(button);
 }
 
-async function submitAttack(player, stageIndex) {
+async function submitAttack(player, stageIndex, totalStages) {
     // generate card string for attack
-    // do check for no repeated weapons
+    let query = document.querySelectorAll(".selected");
+    cardString = ""
+    query.forEach((element) => {
+        cardString += element.innerHTML + " ";
+    });
+    cardString = cardString.substring(0, cardString.length-1);
+
+    // no repeated weapons confirmed by button inputs
     // post submitAttack(player, cardString, stageIndex) to backend
+    let response = await fetch(`${apiBaseUrl}/submitAttack?p=${player}&c=${cardString}&i=${stageIndex}`, {
+        method: 'POST'
+    });
+    await updateScoreboard();
+    let result = await response.text();
 
     // response is a win or loss
-    // on loss remove from eligible attackers in DOM
+    deleteButtons();
+    button = makeActionButton();
+    if (result == "success") {
+        mainText.innerHTML = "Attack Successful!";
+        // if this was last of eligible player, stageIndex++
+        let participants = document.getElementById("eligible-list").getAttribute("participants");
+        let np;
+        if (participants.charAt(participants.length-1) == player) {
+            // if this is the only player in the participants, resolve quest
+            if (participants.length == 1) {
+                return resolveQuest(totalStages);
+            }
 
-    // if this was last of eligible player, stageIndex++
-    // promptPlayer(nextPlayer, promptAttack(nextPlayer, stageIndex)
+            // go to head of the participants
+            np = participants.charAt(0);
+            stageIndex++;
+
+        } else {
+            // there are more players behind in the list, get next
+            np = participants.charAt(participants.indexOf(player)+1);
+        }
+        if (stageIndex > totalStages) {
+            button.setAttribute("onclick", `resolveQuest(${totalStages})`);
+        } else {
+            button.setAttribute("onclick", `promptPlayer(${np}, 'promptAttack(${np}, ${stageIndex}, ${totalStages})')`);
+        }
+
+    } else {
+        mainText.innerHTML = "Attack Failed";
+
+        // refuse has the end result of removing player from the eligible attackers
+        button.setAttribute("onclick", `refuse(${player}, ${stageIndex}, ${totalStages})`);
+    }
+
+
+
+    promptSpace.appendChild(button);
 }
 
-async function resolveQuest() {
-    // lookup the remaining eligible players from the DOM
-    // lookup the sponsor from the DOM
-    // lookup the quest size from the DOM
+async function resolveQuest(size) {
+    deleteButtons();
+    // lookup the remaining eligible players
     // award eligible players with shields
-    // request replenishCards(player) from the backend (it should access the overview and do the rest)
-    // check winners
+    let participants = document.getElementById("eligible-list").getAttribute("participants");
+    let pString = "";
+    for (let i = 0; i < participants.length; i++) {
+        pString += participants.charAt(i) + " ";
+    }
+    pString = pString.substring(0, pString.length-1);
+    if (pString.length == 0) {
+        pString = "none";
+    }
 
-    // nextPlayer = person that drew event +1
-    // no winners, check trim -> next action promptPlayer(nextPlayer, drawEvent)
+    mainText.innerHTML = "Quest ended, awarding Player " + pString + ": " + size + " shields";
+
+    try{
+        // award shields
+        await fetch(`${apiBaseUrl}/awardShields?plist=${pString}&s=${size}`, {
+            method: 'POST'
+        });
+        await updateScoreboard();
+
+        // request replenishCards(player) from the backend (it should access the overview and do the rest)
+        let response = await fetch (`${apiBaseUrl}/replenish?p=${questSponsor}`, {
+            method: 'POST'
+        });
+        await updateScoreboard();
+        let handSize = await response.text();
+
+        let button = makeActionButton();
+        if (handSize > 12) {
+            // promptplayer trims
+            button.setAttribute("onclick", `promptPlayer( ${questSponsor}, 'checkWinners()' )`);
+        } else {
+            button.setAttribute("onclick", 'checkWinners()');
+        }
+
+        promptSpace.appendChild(button);
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+async function checkWinners() {
+    deleteButtons();
+    deleteTemp();
+
+    try{
+        let response = await fetch(`${apiBaseUrl}/winners`);
+        let winners = await response.text();
+
+        if (winners != '0') {
+            mainText.innerHTML = "Congratulations to our Winners: " + winners;
+        } else {
+            // no winners, prompt next player to draw event
+            eventPlayer = nextPlayer(eventPlayer);
+            promptPlayer(eventPlayer, `drawEvent(${eventPlayer})`)
+        }
+    } catch (e) {
+        console.error(e);
+    }
 }
 
 
+
+
+
+
+
+
+
+
+// HELPERS
 // used when selecting foe/weapon for stages
 function selectButtonClass(item) {
     let buttonClass = "." + item.getAttribute("item-type");
