@@ -122,12 +122,14 @@ async function doEvent() {
     eventPlayer = nextPlayer(parseInt(eventPlayer));
 
     if (cards > 12) {
+        console.log("route 1");
         button.setAttribute("onclick", `trim(${temp}, 'promptPlayer(${eventPlayer}, \\'drawEvent(${eventPlayer})\\')')`);
     } else {
-        eventPlayer = nextPlayer(parseInt(eventPlayer));
+        console.log("next: " + eventPlayer)
         button.setAttribute("onclick", `promptPlayer(${eventPlayer}, 'drawEvent(${eventPlayer})')`);
     }
     button.classList.add("next");
+    button.setAttribute("id", "next");
     document.getElementById("promptSpace").appendChild(button);
 
 

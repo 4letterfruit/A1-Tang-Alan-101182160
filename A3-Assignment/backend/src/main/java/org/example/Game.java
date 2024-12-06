@@ -36,8 +36,7 @@ public class Game {
     public void webTrim(@RequestParam String p, @RequestParam String s) {
         Player player = getPlayerById(Integer.parseInt(p));
         String[] cardArray = s.split(" ");
-        System.out.println(Arrays.toString(cardArray));
-        System.out.println(s);
+        System.out.println("trim" + s);
         for (String card : cardArray) {
             player.remove(card);
             adventureDeck.discard(card);
@@ -102,8 +101,8 @@ public class Game {
         Player_Hand_Is(3, "F25 F30 H10 H10 S10 S10 S10 B15 B15 L20 L20 E30");
         Player_Hand_Is(4, "F25 F30 F70 H10 H10 S10 S10 S10 B15 B15 L20 L20");
 
-        rigDrawOrder(eventDeck, "Q5,E-Plague,E-Prosperity,E-Queen's Favor,Q3");
-        rigDrawOrder(adventureDeck, "F5,F10,F20,F15,F5,F25,F5,F10,F20,F5,F5,F10,F10,F15,F15,F15,F15,F25,F25,H10,S10,B15,F40,D5,D5,F30,F25,B15,H10,F50,S10,S10,F40,F50,H10,H10,H10,S10,S10,S10,S10,F35");
+        rigDrawOrder(eventDeck, "Q4,E-Plague,E-Prosperity,E-Queen's Favor,Q3");
+        rigDrawOrder(adventureDeck, "F5,F10,F20,F15,F5,F25,F5,F10,F20,F5,F10,F20,F5,F5,F10,F10,F15,F15,F15,F15,F25,H10,B15,D5,F25,S10,F40,D5,F30,F25,B15,H10,F50,S10,S10,F40,F50,H10,H10,H10,S10,S10,S10,S10,F35");
     }
 
     @PostMapping("/rig4")
@@ -284,7 +283,6 @@ public class Game {
             output.println(player.hand);
             output.flush();
 
-            System.out.println(prevValue);
             String in = input.nextLine();
             if (in.equalsIgnoreCase("end_test")){
                 return null;
@@ -383,9 +381,6 @@ public class Game {
         for (String card : attack) {
             player.remove(card);
         }
-        System.out.println(webOverview.get(index));
-        System.out.println("vs");
-        System.out.println(attack);
         if(result) {
             return "success";
         } else {
