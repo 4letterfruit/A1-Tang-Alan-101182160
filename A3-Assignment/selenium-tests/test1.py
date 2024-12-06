@@ -10,7 +10,17 @@ import time
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
 
 try:
-    driver.get("file:///Users/Alan Tang/Desktop/Git/A1-Tang-Alan-101182160/A3-Assignment/frontend/index.html")
-    print("run")
+    directory = "file:///C:/Users/Alan Tang/Desktop/Git/A1-Tang-Alan-101182160/A3-Assignment/frontend/index.html"
+
+    driver.get(directory)
+
+    time.sleep(2)
+
+    x_button = driver.find_element(By.ID, "start-button")
+    x_button.click()
+    time.sleep(1)
+
+    x_button = driver.find_elements(By.CSS_SELECTOR, "#id .class")
+    assert (True == True)
 finally:
     driver.quit()

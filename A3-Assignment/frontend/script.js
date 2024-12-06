@@ -610,6 +610,23 @@ async function checkWinners() {
 
 // HELPERS
 // used when selecting foe/weapon for stages
+async function rig(i) {
+    switch (i) {
+        case 1:
+            await fetch(`${apiBaseUrl}/rig1`, {method: 'POST'});
+            return;
+        case 2:
+            await fetch(`${apiBaseUrl}/rig2`, {method: 'POST'});
+            return;
+        case 3:
+            await fetch(`${apiBaseUrl}/rig3`, {method: 'POST'});
+            return;
+        case 4:
+            await fetch(`${apiBaseUrl}/rig4`, {method: 'POST'});
+            return;
+    }
+}
+
 function selectButtonClass(item) {
     let buttonClass = "." + item.getAttribute("item-type");
     if (item.classList.contains("disabled")) {

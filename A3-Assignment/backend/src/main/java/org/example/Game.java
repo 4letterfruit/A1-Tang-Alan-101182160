@@ -76,6 +76,69 @@ public class Game {
         return player.hand.toString().substring(1,player.hand.toString().length()-1);
     }
 
+    @PostMapping("/rig1")
+    public void scenario1(){
+        initializePlayers();
+        initializeDecks();
+
+        Player_Hand_Is(1, "F5 F5 F15 F15 D5 S10 S10 H10 H10 B15 B15 L20");
+        Player_Hand_Is(2, "F5 F5 F15 F15 F40 D5 S10 H10 H10 B15 B15 E30");
+        Player_Hand_Is(3, "F5 F5 F5 F15 D5 S10 S10 S10 H10 H10 B15 L20");
+        Player_Hand_Is(4, "F5 F15 F15 F40 D5 D5 S10 H10 H10 B15 L20 E30");
+
+    }
+
+    @PostMapping("/rig2")
+    public void scenario2(){
+        initializePlayers();
+        initializeDecks();
+
+        Player_Hand_Is(1, "F5 F5 F10 F10 F15 F15 D5 H10 H10 B15 B15 L20");
+        Player_Hand_Is(2, "F40 F50 S10 S10 S10 H10 H10 B15 B15 L20 L20 E30");
+        Player_Hand_Is(3, "F5 F5 F5 F5 D5 D5 D5 H10 H10 H10 H10 H10");
+        Player_Hand_Is(4, "F50 F70 H10 H10 S10 S10 S10 B15 B15 L20 L20 E30");
+    }
+
+    @PostMapping("/rig3")
+    public void scenario3(){
+        initializePlayers();
+        initializeDecks();
+
+        Player_Hand_Is(1, "F5 F5 F10 F10 F15 F15 F20 F20 D5 D5 D5 D5");
+        Player_Hand_Is(2, "F25 F30 H10 H10 S10 S10 S10 B15 B15 L20 L20 E30");
+        Player_Hand_Is(3, "F25 F30 H10 H10 S10 S10 S10 B15 B15 L20 L20 E30");
+        Player_Hand_Is(4, "F25 F30 F70 H10 H10 S10 S10 S10 B15 B15 L20 L20");
+    }
+
+    @PostMapping("/rig4")
+    public void scenario4(){
+        initializePlayers();
+        initializeDecks();
+
+        Player_Hand_Is(1, "F50 F70 D5 D5 H10 H10 S10 S10 B15 B15 L20 L20");
+        Player_Hand_Is(2, "F5 F5 F10 F15 F15 F20 F20 F25 F30 F30 F40 E30");
+        Player_Hand_Is(3, "F5 F5 F10 F15 F15 F20 F20 F25 F25 F30 F40 L20");
+        Player_Hand_Is(4, "F5 F5 F10 F15 F15 F20 F20 F25 F25 F30 F50 E30");
+    }
+
+
+
+
+
+
+
+
+    public void Player_Hand_Is(int p, String h){
+        Player player = getPlayerById(p);
+        String[] g = h.split(" ");
+        for (String s : g) {
+            adventureDeck.swap(adventureDeck.cardList.indexOf(s), adventureDeck.size() - 1);
+            player.add(adventureDeck.draw());
+        }
+
+        System.out.println(String.format("Player %d hand is %s", p, player.hand));
+    }
+
     public void initializePlayers(){
         PLAYER_1 = new Player(1);
         PLAYER_2 = new Player(2);
