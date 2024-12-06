@@ -744,3 +744,7 @@ async function showHands() {
     handDisplay.appendChild(p4);
 
 }
+
+async function restart() {
+    location.reload()
+}
