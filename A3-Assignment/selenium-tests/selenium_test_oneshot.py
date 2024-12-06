@@ -603,5 +603,575 @@ class GameTest(unittest.TestCase):
         self.assertTrue (mainText == "Congratulations to our Winners: [2, 4]")
 
 
+    def test_1_winner_with_events(self):
+        self.driver.find_element(By.ID, "restart").click()
+        time.sleep(2)
+
+        self.driver.find_element(By.ID, "scenario-3").click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "start-button").click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+    
+        # Q4 drawn
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "yes").click()
+        time.sleep(1)
+    
+        # P1 build stages
+        self.driver.find_elements(By.CLASS_NAME, "F5")[0].click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        self.driver.find_elements(By.CLASS_NAME, "F10")[0].click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        self.driver.find_elements(By.CLASS_NAME, "F15")[0].click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        self.driver.find_elements(By.CLASS_NAME, "F20")[0].click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+    
+        # P2 attack 1
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "yes").click()
+        time.sleep(1)
+        #discard
+        self.driver.find_elements(By.CLASS_NAME, "F5")[0].click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        #attack
+        self.driver.find_elements(By.CLASS_NAME, "S10")[0].click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+    
+        # P3 attack 1
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "yes").click()
+        time.sleep(1)
+        #discard
+        self.driver.find_elements(By.CLASS_NAME, "F10")[0].click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        #attack
+        self.driver.find_elements(By.CLASS_NAME, "S10")[0].click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+    
+        # P4 attack 1
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "yes").click()
+        time.sleep(1)
+        #discard
+        self.driver.find_elements(By.CLASS_NAME, "F20")[0].click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        #attack
+        self.driver.find_elements(By.CLASS_NAME, "S10")[0].click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+    
+        # P2 attack 2
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "yes").click()
+        time.sleep(1)
+        #attack
+        self.driver.find_elements(By.CLASS_NAME, "H10")[0].click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+    
+        # P3 attack 2
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "yes").click()
+        time.sleep(1)
+        #attack
+        self.driver.find_elements(By.CLASS_NAME, "H10")[0].click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+    
+        # P4 attack 2
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "yes").click()
+        time.sleep(1)
+        #attack
+        self.driver.find_elements(By.CLASS_NAME, "H10")[0].click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+    
+        # P2 attack 3
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "yes").click()
+        time.sleep(1)
+        #attack
+        self.driver.find_elements(By.CLASS_NAME, "B15")[0].click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+    
+        # P3 attack 3
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "yes").click()
+        time.sleep(1)
+        #attack
+        self.driver.find_elements(By.CLASS_NAME, "B15")[0].click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+    
+        # P4 attack 3
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "yes").click()
+        time.sleep(1)
+        #attack
+        self.driver.find_elements(By.CLASS_NAME, "B15")[0].click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+    
+        # P2 attack 4
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "yes").click()
+        time.sleep(1)
+        #attack
+        self.driver.find_elements(By.CLASS_NAME, "L20")[0].click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+    
+        # P3 attack 4
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "yes").click()
+        time.sleep(1)
+        #attack
+        self.driver.find_elements(By.CLASS_NAME, "L20")[0].click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+    
+        # P4 attack 4
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "yes").click()
+        time.sleep(1)
+        #attack
+        self.driver.find_elements(By.CLASS_NAME, "L20")[0].click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+    
+        # award shields
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+    
+        # P1 trim
+        self.driver.find_elements(By.CLASS_NAME, "F5")[0].click()
+        self.driver.find_elements(By.CLASS_NAME, "F5")[1].click()
+        self.driver.find_elements(By.CLASS_NAME, "F10")[0].click()
+        self.driver.find_elements(By.CLASS_NAME, "F10")[1].click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+    
+    
+        # P2 turn
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        # Plague
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+    
+        # P3 turn
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        # Prosperity
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+    
+        #discard player 3
+        self.driver.find_elements(By.CLASS_NAME, "F5")[0].click()
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+    
+        #player 4 turn
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+    
+        # prompted to discard from prosperity
+        self.driver.find_elements(By.CLASS_NAME, "F20")[0].click()
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+    
+        #queen's favor
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        self.driver.find_elements(By.CLASS_NAME, "F25")[0].click()
+        self.driver.find_elements(By.CLASS_NAME, "F30")[0].click()
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+    
+        #player 1
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        # discard from prosperity
+        self.driver.find_elements(By.CLASS_NAME, "F5")[0].click()
+        self.driver.find_elements(By.CLASS_NAME, "F10")[0].click()
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+    
+        #q3 drawn
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "yes").click()
+        time.sleep(1)
+    
+        # stage creation
+        self.driver.find_elements(By.CLASS_NAME, "F15")[0].click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        self.driver.find_elements(By.CLASS_NAME, "F15")[0].click()
+        self.driver.find_elements(By.CLASS_NAME, "D5")[0].click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        self.driver.find_elements(By.CLASS_NAME, "F20")[0].click()
+        self.driver.find_elements(By.CLASS_NAME, "D5")[0].click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+    
+    
+        # player 2 discard + attack
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        # discard from prosperity
+        self.driver.find_elements(By.CLASS_NAME, "F5")[0].click()
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        # accept
+        self.driver.find_element(By.ID, "yes").click()
+        time.sleep(1)
+        #discard
+        self.driver.find_elements(By.CLASS_NAME, "F5")[0].click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        #attack
+        self.driver.find_elements(By.CLASS_NAME, "B15")[0].click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+    
+        # P3 attack 1
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "yes").click()
+        time.sleep(1)
+        #discard
+        self.driver.find_elements(By.CLASS_NAME, "F10")[0].click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        #attack
+        self.driver.find_elements(By.CLASS_NAME, "B15")[0].click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+    
+        # P4 attack 1
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "yes").click()
+        time.sleep(1)
+        #discard
+        self.driver.find_elements(By.CLASS_NAME, "F20")[0].click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        #attack
+        self.driver.find_elements(By.CLASS_NAME, "H10")[0].click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+    
+        # P2 attack 2
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "yes").click()
+        time.sleep(1)
+        #attack
+        self.driver.find_elements(By.CLASS_NAME, "B15")[0].click()
+        self.driver.find_elements(By.CLASS_NAME, "H10")[0].click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+    
+        # P3 attack 2
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "yes").click()
+        time.sleep(1)
+        #attack
+        self.driver.find_elements(By.CLASS_NAME, "B15")[0].click()
+        self.driver.find_elements(By.CLASS_NAME, "S10")[0].click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+    
+        # P2 attack 3
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "yes").click()
+        time.sleep(1)
+        #attack
+        self.driver.find_elements(By.CLASS_NAME, "L20")[0].click()
+        self.driver.find_elements(By.CLASS_NAME, "S10")[0].click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+    
+        # P3 attack 3
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "yes").click()
+        time.sleep(1)
+        #attack
+        self.driver.find_elements(By.CLASS_NAME, "E30")[0].click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+    
+        # awarding shields
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+    
+        # p1
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        self.driver.find_elements(By.CLASS_NAME, "F15")[0].click()
+        self.driver.find_elements(By.CLASS_NAME, "F15")[1].click()
+        self.driver.find_elements(By.CLASS_NAME, "F15")[2].click()
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+    
+        # winners are declared
+        # do asserts
+        self.driver.find_element(By.ID, "show-hands").click()
+        time.sleep(1)
+    
+        shields = self.driver.find_elements(By.CLASS_NAME, "shield-count")
+        p1Shields = shields[0].get_attribute("innerHTML")
+        p2Shields = shields[1].get_attribute("innerHTML")
+        p3Shields = shields[2].get_attribute("innerHTML")
+        p4Shields = shields[3].get_attribute("innerHTML")
+        assert (p1Shields == '0')
+        assert (p2Shields == '5')
+        assert (p3Shields == '7')
+        assert (p4Shields == '4')
+    
+        p1Hand = self.driver.find_element(By.ID, "p1-hand").get_attribute("innerHTML")
+        p2Hand = self.driver.find_element(By.ID, "p2-hand").get_attribute("innerHTML")
+        p3Hand = self.driver.find_element(By.ID, "p3-hand").get_attribute("innerHTML")
+        p4Hand = self.driver.find_element(By.ID, "p4-hand").get_attribute("innerHTML")
+    
+        assert (p1Hand == "P1: F25,F25,F35,D5,D5,S10,S10,S10,S10,H10,H10,H10")
+        assert (p2Hand == "P2: F15,F25,F30,F40,S10,S10,S10,H10,E30")
+        assert (p3Hand == "P3: F10,F25,F30,F40,F50,S10,S10,H10,H10,L20")
+        assert (p4Hand == "P4: F25,F25,F30,F50,F70,D5,D5,S10,S10,B15,L20")
+    
+        mainText = self.driver.find_element(By.ID, "mainText").get_attribute("innerHTML")
+        assert (mainText == "Congratulations to our Winners: [3]")
+
+
+    def test_0_winner_quest(self):
+        self.driver.find_element(By.ID, "restart").click()
+        time.sleep(2)
+
+        self.driver.find_element(By.ID, "scenario-4").click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "start-button").click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+
+        # Q4 is drawn
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "yes").click()
+        time.sleep(1)
+
+        # create stages
+        self.driver.find_elements(By.CLASS_NAME, "F50")[0].click()
+        self.driver.find_elements(By.CLASS_NAME, "D5")[0].click()
+        self.driver.find_elements(By.CLASS_NAME, "S10")[0].click()
+        self.driver.find_elements(By.CLASS_NAME, "H10")[0].click()
+        self.driver.find_elements(By.CLASS_NAME, "B15")[0].click()
+        self.driver.find_elements(By.CLASS_NAME, "L20")[0].click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        self.driver.find_elements(By.CLASS_NAME, "F70")[0].click()
+        self.driver.find_elements(By.CLASS_NAME, "D5")[0].click()
+        self.driver.find_elements(By.CLASS_NAME, "S10")[0].click()
+        self.driver.find_elements(By.CLASS_NAME, "H10")[0].click()
+        self.driver.find_elements(By.CLASS_NAME, "B15")[0].click()
+        self.driver.find_elements(By.CLASS_NAME, "L20")[0].click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+
+        # P2 attack 1
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "yes").click()
+        time.sleep(1)
+        #discard
+        self.driver.find_elements(By.CLASS_NAME, "F5")[0].click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        #attack
+        self.driver.find_elements(By.CLASS_NAME, "E30")[0].click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+
+        # P3 attack 1
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "yes").click()
+        time.sleep(1)
+        #discard
+        self.driver.find_elements(By.CLASS_NAME, "F15")[0].click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        #attack
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+
+        # P4 attack 1
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "yes").click()
+        time.sleep(1)
+        #discard
+        self.driver.find_elements(By.CLASS_NAME, "F10")[0].click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        #attack
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+
+        # awarding shields
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+
+        # player 1
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+        self.driver.find_elements(By.CLASS_NAME, "F5")[0].click()
+        self.driver.find_elements(By.CLASS_NAME, "F10")[0].click()
+        self.driver.find_element(By.ID, "next").click()
+        time.sleep(1)
+
+
+        # asserts
+        self.driver.find_element(By.ID, "show-hands").click()
+        time.sleep(1)
+        shields = self.driver.find_elements(By.CLASS_NAME, "shield-count")
+        p1Shields = shields[0].get_attribute("innerHTML")
+        p2Shields = shields[1].get_attribute("innerHTML")
+        p3Shields = shields[2].get_attribute("innerHTML")
+        p4Shields = shields[3].get_attribute("innerHTML")
+        assert (p1Shields == '0')
+        assert (p2Shields == '0')
+        assert (p3Shields == '0')
+        assert (p4Shields == '0')
+
+        p1Hand = self.driver.find_element(By.ID, "p1-hand").get_attribute("innerHTML")
+        p2Hand = self.driver.find_element(By.ID, "p2-hand").get_attribute("innerHTML")
+        p3Hand = self.driver.find_element(By.ID, "p3-hand").get_attribute("innerHTML")
+        p4Hand = self.driver.find_element(By.ID, "p4-hand").get_attribute("innerHTML")
+
+        assert (p1Hand == "P1: F15,D5,D5,D5,D5,S10,S10,S10,H10,H10,H10,H10")
+        assert (p2Hand == "P2: F5,F5,F10,F15,F15,F20,F20,F25,F30,F30,F40")
+        assert (p3Hand == "P3: F5,F5,F10,F15,F15,F20,F20,F25,F25,F30,F40,L20")
+        assert (p4Hand == "P4: F5,F5,F10,F15,F15,F20,F20,F25,F25,F30,F50,E30")
+
+
 if __name__ == "__main__":
     unittest.main()
