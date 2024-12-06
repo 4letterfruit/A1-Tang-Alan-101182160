@@ -32,19 +32,6 @@ public class Game {
         distributeCards();
     }
 
-    @GetMapping("/start")
-    public String start(){
-        initializeDecks();
-        initializePlayers();
-
-        adventureDeck.shuffle();
-        eventDeck.shuffle();
-
-        distributeCards();
-        // returning format P1-handsize P1-shields P2-handsize P2-shields P3-handsize P3-shields P4-handsize P4-shields
-        return currentScoreboard();
-    }
-
     @PostMapping("/trim")
     public void webTrim(@RequestParam String p, @RequestParam String s) {
         Player player = getPlayerById(Integer.parseInt(p));
@@ -57,6 +44,7 @@ public class Game {
         }
     }
 
+    @CrossOrigin
     @GetMapping("/scoreboard")
     public String currentScoreboard(){
         return String.format("%d %d %d %d %d %d %d %d",
@@ -66,7 +54,7 @@ public class Game {
 
     public void initializeDecks(){
         adventureDeck = new Deck("F5/8,F10/7,F15/8,F20/7,F25/7,F30/4,F35/4,F40/2,F50/2,F70/1,D5/6,H10/12,S10/16,B15/8,L20/6,E30/2");
-        eventDeck = new Deck("Q1/3"); //"Q2/3,Q3/4,Q4/3,Q5/2,E-Plague/1,E-Queen's Favor/2,E-Prosperity/2"
+        eventDeck = new Deck("Q2/3,Q3/4,Q4/3,Q5/2,E-Plague/1,E-Queen's Favor/2,E-Prosperity/2");
     }
 
     @GetMapping("/getHand")
@@ -86,6 +74,8 @@ public class Game {
         Player_Hand_Is(3, "F5 F5 F5 F15 D5 S10 S10 S10 H10 H10 B15 L20");
         Player_Hand_Is(4, "F5 F15 F15 F40 D5 D5 S10 H10 H10 B15 L20 E30");
 
+        rigDrawOrder(eventDeck, "Q4");
+        rigDrawOrder(adventureDeck, "S10,B15,F30,L20,L20,F10,B15,S10,F30,L20");
     }
 
     @PostMapping("/rig2")
@@ -97,6 +87,9 @@ public class Game {
         Player_Hand_Is(2, "F40 F50 S10 S10 S10 H10 H10 B15 B15 L20 L20 E30");
         Player_Hand_Is(3, "F5 F5 F5 F5 D5 D5 D5 H10 H10 H10 H10 H10");
         Player_Hand_Is(4, "F50 F70 H10 H10 S10 S10 S10 B15 B15 L20 L20 E30");
+
+        rigDrawOrder(eventDeck, "Q4,Q3");
+        rigDrawOrder(adventureDeck, "F5,F40,F10,F10,F30,F30,F15,F15,F20,F5,F10,F15,F15,F20,F20,F20,F20,F25,F25,F30,D5,D5,F15,F15,F25,F25,F20,F20,F25,F30,S10,B15,B15,L20");
     }
 
     @PostMapping("/rig3")
@@ -108,6 +101,9 @@ public class Game {
         Player_Hand_Is(2, "F25 F30 H10 H10 S10 S10 S10 B15 B15 L20 L20 E30");
         Player_Hand_Is(3, "F25 F30 H10 H10 S10 S10 S10 B15 B15 L20 L20 E30");
         Player_Hand_Is(4, "F25 F30 F70 H10 H10 S10 S10 S10 B15 B15 L20 L20");
+
+        rigDrawOrder(eventDeck, "Q5,E-Plague,E-Prosperity,E-Queen's Favor,Q3");
+        rigDrawOrder(adventureDeck, "F5,F10,F20,F15,F5,F25,F5,F10,F20,F5,F5,F10,F10,F15,F15,F15,F15,F25,F25,H10,S10,B15,F40,D5,D5,F30,F25,B15,H10,F50,S10,S10,F40,F50,H10,H10,H10,S10,S10,S10,S10,F35");
     }
 
     @PostMapping("/rig4")
@@ -119,6 +115,9 @@ public class Game {
         Player_Hand_Is(2, "F5 F5 F10 F15 F15 F20 F20 F25 F30 F30 F40 E30");
         Player_Hand_Is(3, "F5 F5 F10 F15 F15 F20 F20 F25 F25 F30 F40 L20");
         Player_Hand_Is(4, "F5 F5 F10 F15 F15 F20 F20 F25 F25 F30 F50 E30");
+
+        rigDrawOrder(eventDeck, "Q2");
+        rigDrawOrder(adventureDeck, "F5,F15,F10,F5,F10,F15,D5,D5,D5,D5,H10,H10,H10,H10,S10,S10,S10");
     }
 
 
@@ -126,7 +125,15 @@ public class Game {
 
 
 
-
+    public void rigDrawOrder(Deck deck, String order) {
+        String[] cards = order.split(",");
+        int index = deck.size()-1;
+        for (String card : cards) {
+            deck.swap(deck.cardList.indexOf(card), index);
+            index--;
+        }
+        System.out.println(deck.cardList);
+    }
 
     public void Player_Hand_Is(int p, String h){
         Player player = getPlayerById(p);
@@ -356,7 +363,9 @@ public class Game {
     @PostMapping("/draw")
     public String drawPlayer(@RequestParam String p) {
         Player player = getPlayerById(Integer.parseInt(p));
-        player.add(adventureDeck.draw());
+        String card = adventureDeck.draw();
+        player.add(card);
+        System.out.println("Player " + p + " drew " + card);
 
         return "" + player.handSize();
     }

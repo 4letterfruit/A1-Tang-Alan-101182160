@@ -52,6 +52,7 @@ async function promptPlayer(player, nextAction) {
     let nextButton = document.createElement("button");
     nextButton.classList.add("action-button");
     nextButton.classList.add("next");
+    nextButton.setAttribute("id", "next");
     nextButton.innerHTML = "Continue";
 
     let array = await getHandArray(player);
@@ -93,6 +94,7 @@ async function drawEvent(player) {
             let button = makeActionButton();
             button.setAttribute("onclick", `promptQuest(${player}, ${size})`);
             button.classList.add("next");
+            button.setAttribute("id", "next");
             promptSpace.appendChild(button);
     }
 }
@@ -144,6 +146,7 @@ async function trim(player, nextAction) {
         let button = makeActionButton();
         button.innerHTML = card;
         button.setAttribute("onclick", "selectButtonClass(this)");
+        button.classList.add(card);
         handDisplay.appendChild(button);
     });
 
@@ -151,6 +154,7 @@ async function trim(player, nextAction) {
     let button = makeActionButton();
     button.setAttribute("onclick", `doTrim(${player}, "${nextAction}")`);
     button.classList.add("next");
+    button.setAttribute("id", "next");
 
     promptSpace.appendChild(button);
 }
@@ -220,7 +224,8 @@ async function promptQuest(player, size) {
         eventPlayer = nextPlayer (eventPlayer);
         noButton.setAttribute("onclick", `promptPlayer(${eventPlayer}, 'drawEvent(${eventPlayer})')`);
     }
-
+    yesButton.setAttribute("id", "yes");
+    noButton.setAttribute("id", "no");
     promptSpace.appendChild(yesButton);
     promptSpace.appendChild(noButton);
 }
@@ -288,6 +293,8 @@ async function startCreateStage(player, prevValue, currentStage, totalStages) {
         button.setAttribute("onclick", "selectButtonClass(this)");
         button.setAttribute("item-type", card.charAt(0));
         button.classList.add(card.charAt(0));
+        button.classList.add(card);
+
 
         handDisplay.appendChild(button);
     });
@@ -295,6 +302,8 @@ async function startCreateStage(player, prevValue, currentStage, totalStages) {
     // create a submit button, onclick submitStage(player, prevValue, currentStage)
     let button = makeActionButton();
     button.innerHTML = "submit";
+    button.setAttribute("id", "next");
+
     button.setAttribute("onclick", `submitStage(${player}, ${prevValue}, ${currentStage}, ${totalStages})`);
     promptSpace.appendChild(button);
 }
@@ -371,6 +380,7 @@ async function promptAttack(player, stageIndex, totalStages) {
         let button = makeActionButton();
         button.innerHTML = card;
         button.classList.add(card.charAt(0));
+        button.classList.add(card);
 
         handDisplay.appendChild(button);
     });
@@ -380,12 +390,14 @@ async function promptAttack(player, stageIndex, totalStages) {
     yesButton = makeActionButton();
     yesButton.innerHTML = "yes";
     yesButton.setAttribute("onclick", `startAttack(${player}, ${stageIndex}, ${totalStages})`);
+    yesButton.setAttribute("id", "yes");
     promptSpace.appendChild(yesButton);
 
     // create a button, onclick=refuse(player, stageIndex, totalStages)
     noButton = makeActionButton();
     noButton.innerHTML = "no";
     noButton.setAttribute("onclick", `refuse(${player}, ${stageIndex}, ${totalStages})`);
+    noButton.setAttribute("id", "no");
     promptSpace.appendChild(noButton);
 }
 
@@ -467,6 +479,7 @@ async function doAttack(player, stageIndex, totalStages) {
         button.innerHTML = card;
         button.setAttribute("onclick", "selectButtonClass(this)");
         button.classList.add(card.charAt(0));
+        button.classList.add(card);
         handDisplay.appendChild(button);
         button.setAttribute("item-type", card.charAt(0));
     });
@@ -475,6 +488,8 @@ async function doAttack(player, stageIndex, totalStages) {
     // create a submit button that triggers submitAttack(player, stageIndex, totalStages)
     let button = makeActionButton();
     button.setAttribute("onclick", `submitAttack(${player}, ${stageIndex}, ${totalStages})`);
+    button.setAttribute("id", "next");
+
     promptSpace.appendChild(button);
 }
 
@@ -531,7 +546,7 @@ async function submitAttack(player, stageIndex, totalStages) {
     }
 
 
-
+    button.setAttribute("id", "next");
     promptSpace.appendChild(button);
 }
 
@@ -572,7 +587,7 @@ async function resolveQuest(size) {
         } else {
             button.setAttribute("onclick", 'checkWinners()');
         }
-
+        button.setAttribute("id", "next");
         promptSpace.appendChild(button);
     } catch (e) {
         console.error(e);
@@ -696,4 +711,36 @@ function setPlayerScore(p, cards, shields) {
 
     player.querySelector(".card-count").innerHTML = cards;
     player.querySelector(".shield-count").innerHTML = shields;
+}
+
+async function showHands() {
+    let p1Hand = await getHandArray(1);
+    let p2Hand = await getHandArray(2);
+    let p3Hand = await getHandArray(3);
+    let p4Hand = await getHandArray(4);
+
+    let p1 = document.createElement("p");
+    p1.setAttribute("id", "p1-hand");
+    p1.innerHTML = "P1: " + p1Hand;
+
+    let p2 = document.createElement("p");
+    p2.setAttribute("id", "p2-hand");
+    p2.innerHTML = "P2: " + p2Hand;
+
+    let p3 = document.createElement("p");
+    p3.setAttribute("id", "p3-hand");
+    p3.innerHTML = "P3: " + p3Hand;
+
+    let p4 = document.createElement("p");
+    p4.setAttribute("id", "p4-hand");
+    p4.innerHTML = "P4: " + p4Hand;
+
+
+
+
+    handDisplay.appendChild(p1);
+    handDisplay.appendChild(p2);
+    handDisplay.appendChild(p3);
+    handDisplay.appendChild(p4);
+
 }
