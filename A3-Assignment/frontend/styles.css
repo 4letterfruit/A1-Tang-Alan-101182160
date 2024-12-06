@@ -19,3 +19,15 @@
 .selected {
     background-color: green;
 }
+
+.disabled {
+    background-color: gray;
+}
+
+#stageDisplay {
+    left: 2em;
+    text-align: left;
+}
+#promptSpace {
+    margin-top: 2em;
+}

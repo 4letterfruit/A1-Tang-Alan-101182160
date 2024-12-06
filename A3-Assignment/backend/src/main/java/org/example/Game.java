@@ -1,5 +1,7 @@
 package org.example;
 
+import com.google.common.collect.Lists;
+import io.cucumber.java.sl.In;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.StringWriter;
@@ -63,11 +65,11 @@ public class Game {
     }
 
     public void initializeDecks(){
-        adventureDeck = new Deck("F5/8,F10/7,F15/8,F20/7,F25/7,F30/4,F35/4,F40/2,F50/2,F70/1,D5/6,H10/12,S10/16,B15/8,L20/6,E30/20000");
-        eventDeck = new Deck("E-Queen's Favor/2"); //"Q2/3,Q3/4,Q4/3,Q5/2,E-Plague/1,E-Queen's Favor/2,E-Prosperity/2"
+        adventureDeck = new Deck("F5/8,F10/7,F15/8,F20/7,F25/7,F30/4,F35/4,F40/2,F50/2,F70/1,D5/6,H10/12,S10/16,B15/8,L20/6,E30/2");
+        eventDeck = new Deck("Q2/3"); //"Q2/3,Q3/4,Q4/3,Q5/2,E-Plague/1,E-Queen's Favor/2,E-Prosperity/2"
     }
 
-    @GetMapping("getHand")
+    @GetMapping("/getHand")
     public String getPlayerHand(@RequestParam String p){
         Player player = getPlayerById(Integer.parseInt(p));
 
@@ -271,6 +273,21 @@ public class Game {
         output.println("Stages successfully set");
         printOverview(output, overview);
         return overview;
+    }
+
+    @PostMapping("/setStage")
+    public String setWebStage(@RequestParam String cards, @RequestParam String p) {
+        // receive cards and move them from the player hand to the stage space
+        String[] cardArray = cards.split(" ");
+        ArrayList<String> cardList = new ArrayList<>(Arrays.asList(cardArray));
+
+        Player player = getPlayerById(Integer.parseInt(p));
+        for (String card : cardList) {
+            player.remove(card);
+        }
+        webOverview.add(cardList);
+
+        return "";
     }
 
     @PostMapping("/createStage")
