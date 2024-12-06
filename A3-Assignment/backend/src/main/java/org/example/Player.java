@@ -52,6 +52,11 @@ public class Player {
         return hand.remove(i-1);
     }
 
+    public void remove(String card) {
+
+        hand.remove(card);
+    }
+
     public int handSize(){
         return hand.size();
     }

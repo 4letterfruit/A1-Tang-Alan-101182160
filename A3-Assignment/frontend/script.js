@@ -1,73 +1,191 @@
 const apiBaseUrl = "http://localhost:8080";
 
+
+let eventPlayer = 1;
+let mainText;
+let handDisplay;
+let promptSpace;
+
+function nextPlayer(p) {
+    return (p%4) + 1;
+}
+
 async function start() {
     // remove some of the current elements
+    deleteButtons();
+    document.getElementById("welcome").remove();
 
     // generate new space for game
+    let stages = document.createElement("div");
+    stages.setAttribute("id", "stageDisplay");
+    handDisplay = document.createElement("div");
+    handDisplay.setAttribute("id", "handDisplay");
+    promptSpace = document.createElement("div");
+    promptSpace.setAttribute("id", "promptSpace");
+
+    mainText = document.createElement("h2");
+    mainText.setAttribute("id", "mainText");
+
+    let output = document.getElementById("output");
+    output.appendChild(mainText);
+    output.appendChild(stages);
+    output.appendChild(handDisplay);
+    output.appendChild(promptSpace);
 
     // start game loop
-
+    await updateScoreboard();
     //loop
     // prompt player -> player hits a button
-
+    promptPlayer(eventPlayer, `drawEvent(${eventPlayer})`)
     // player draws a card
-
     // do something based on information from the card
-
     // check if there are winners
 }
 
 async function promptPlayer(player, nextAction) {
     // delete button that triggered this
+    deleteButtons();
     // create prompt for player
+    document.getElementById("mainText").innerHTML = "Player " + player
+
+    let nextButton = document.createElement("button");
+    nextButton.classList.add("action-button");
+    nextButton.innerHTML = "Continue";
+
+    let cards = countCards(player);
+
+    console.log(cards);
+    if (cards > 12) {
+        nextButton.setAttribute("onclick", `trim(${player}, ${nextAction})`);
+    } else {
+        nextButton.setAttribute("onclick", `${nextAction}`);
+    }
+
+
+    document.getElementById("promptSpace").appendChild(nextButton);
     // prompt button has onclick -> check trim -> nextAction
 
 }
 
 async function drawEvent(player) {
     // delete the button that triggered this
+    deleteButtons();
     // display info
+    const response = await fetch(`${apiBaseUrl}/drawEvent?p=${player}`);
+    const text = await response.text();
+    let promptSpace = document.getElementById("promptSpace");
+    document.getElementById("mainText").innerHTML = "Event Drawn: " + text
+
     // create a button that triggers the next course of action
 
     // plague, queen's favor, prosperity, quest
-
+    switch (text) {
+        case "E-Plague":
+        case "E-Queen's Favor":
+        case "E-Prosperity":
+            doEvent();
+            break;
     // quest should run promptQuest(currentPlayer, size)
+        default:
+            let size = text.substring(1);
+            let button = makeActionButton();
+            button.setAttribute("onclick", `promptQuest(${player}, ${size})`);
+            promptSpace.appendChild(button);
+
+    }
+
 }
 
-async function plague() {
-    // delete the button that triggered this
-    // tell backend to trigger plague
-    // update scoreboard
-    // button to prompt player
+function makeActionButton() {
+    let button = document.createElement("button");
+    button.classList.add("action-button");
+    button.innerHTML = "Next";
+    return button;
 }
 
-async function favor() {
+async function doEvent() {
     // delete the button that triggered this
-    // tell backend to trigger favor
+    deleteButtons();
+    // backend did the work on draw
     // update scoreboard
-    // trim current player if necessary -> next action is promptPlayer(nextPlayer, drawEvent)
+    await updateScoreboard();
+    // button to prompt next player
+    let button = makeActionButton();
+    console.log(button);
+    console.log(eventPlayer);
+    console.log(eventPlayer);
+    let cards = countCards(eventPlayer);
+
+    let temp = eventPlayer;
+    eventPlayer = nextPlayer(parseInt(eventPlayer));
+    console.log(cards);
+    if (cards > 12) {
+        button.setAttribute("onclick", `trim(${temp}, 'promptPlayer(${eventPlayer}, \\'drawEvent(${eventPlayer})\\')')`);
+    } else {
+        eventPlayer = nextPlayer(parseInt(eventPlayer));
+        button.setAttribute("onclick", `promptPlayer(${eventPlayer}, 'drawEvent(${eventPlayer})')`);
+    }
+    document.getElementById("promptSpace").appendChild(button);
+
+
 }
 
-async function prosperity() {
-    // delete the button that triggered this
-    // tell backend to trigger prosperity
-    // update scoreboard
-    // trim current player if necessary -> next action is promptPlayer(nextPlayer, drawEvent)
+function countCards(player) {
+    let classString = ".player-score.player-"+player;
+    console.log(classString);
+    let playerDiv = document.querySelectorAll(classString)[0]; // only one such element
+    let cards = parseInt(playerDiv.querySelectorAll(".card-count")[0].innerHTML);
+    return cards;
 }
 
 async function trim(player, nextAction) {
-    // if handsize too big, request the player's hand from backend
-    // display the hand with buttons
-    // generate submit button
+    deleteButtons();
+    let handArray = await getHandArray(player);
 
+    // get number of cards to discard
+
+    mainText.innerHTML = "Discard " + (handArray.length - 12);
+
+    // display the hand with buttons
+    console.log(handArray);
+    handArray.forEach((card) => {
+        let button = makeActionButton();
+        button.innerHTML = card;
+        button.setAttribute("onclick", "selectButtonClass(this)");
+        handDisplay.appendChild(button);
+    })
+
+    // generate submit button to do next action
+    let button = makeActionButton();
+    button.setAttribute("onclick", `doTrim(${player}, "${nextAction}")`);
+    promptSpace.appendChild(button);
 }
 
 async function doTrim(player, nextAction) {
-    // generate card list
     // do check on card count
+    let selected = document.querySelectorAll(".selected");
+    let textArray = mainText.innerHTML.split(" ");
+    let req = parseInt(textArray[textArray.length-1]);
+    console.log(req);
 
+    if (selected.length != req) {
+        mainText.innerHTML = "Error: discard " + req;
+        return;
+    }
     // submit trim to backend
+    let trimString = "";
+    selected.forEach((element) => {
+        trimString = trimString + element.innerHTML + " ";
+    });
+    trimString = trimString.substring(0, trimString.length-1);
+
+    console.log(trimString);
+    let r = await fetch(`${apiBaseUrl}/trim?p=${player}&s=${trimString}`, {
+        method: 'POST'
+    });
     // update scoreboard
+    await updateScoreboard();
+    deleteButtons();
 
     // create button with `onClick="${nextAction}"`, innerHTML = next
 }
@@ -175,48 +293,67 @@ async function resolveQuest() {
 
 // used when selecting foe/weapon for stages
 function selectButtonClass(item) {
-    let class = item.getAttribute("item-type");
+    let buttonClass = item.getAttribute("item-type");
+    if (item.classList.contains("disabled")) {
+        return;
+    }
 
     // toggle + enable/disable button class
     if (item.classList.contains("selected")) {
-        enableButtonClass(class);
-        item.classList.remove(selected);
+        enableButtonClass(buttonClass);
+        item.classList.remove("selected");
     } else {
-        disableButtonClass(class);
+        disableButtonClass(buttonClass);
         item.classList.remove("disabled");
         item.classList.add("selected");
     }
 }
 
-function disableButtonClass(class) {
-    let list = document.querySelectorAll(class);
+function disableButtonClass(buttonClass) {
+    let list = document.querySelectorAll(buttonClass);
     list.forEach((element) => element.classList.add("disabled"));
 }
 
-function enableButtonClass(class) {
-    let list = document.querySelectorAll(class);
+function enableButtonClass(buttonClass) {
+    let list = document.querySelectorAll(buttonClass);
     list.forEach((element) => element.classList.remove("disabled"));
 }
 
 function deleteButtons() {
     buttons = document.querySelectorAll(".action-button");
+    console.log(buttons);
+    buttons.forEach((element) => element.remove());
+    console.log(buttons);
+}
+
+function deleteTemp() {
+    buttons = document.querySelectorAll(".temp");
     buttons.forEach((element) => element.remove());
 }
 
 async function getHandArray(player) {
     try{
         const response = await fetch(`${apiBaseUrl}/getHand?p=${player}`);
-        const array = response.text.split(", ")
+        let array = await response.text();
+        array = array.split(", ")
+        return array;
     } catch (error) {
         console.error("error in getHandArray:", error);
     }
 }
 
-function setScoreboard(scoreboard) {
-console.log(scoreboard);
-    for (let i = 1; i <= 4; i++){
-        setPlayerScore(i, scoreboard[2*(i-1)], scoreboard[2*(i-1)+1]);
+async function updateScoreboard() {
+    try {
+        const response = await fetch(`${apiBaseUrl}/scoreboard`);
+            let scoreboard = await response.text();
+            scoreboard = scoreboard.split(" ");
+            for (let i = 1; i <= 4; i++){
+                setPlayerScore(i, scoreboard[2*(i-1)], scoreboard[2*(i-1)+1]);
+        }
+    } catch (error) {
+        console.error("error in updateScoreboard")
     }
+
 }
 
 function setPlayerScore(p, cards, shields) {

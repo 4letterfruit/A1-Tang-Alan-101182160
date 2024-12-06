@@ -43,6 +43,19 @@ public class Game {
         return currentScoreboard();
     }
 
+    @PostMapping("/trim")
+    public void webTrim(@RequestParam String p, @RequestParam String s) {
+        Player player = getPlayerById(Integer.parseInt(p));
+        String[] cardArray = s.split(" ");
+        System.out.println(Arrays.toString(cardArray));
+        System.out.println(s);
+        for (String card : cardArray) {
+            player.remove(card);
+            adventureDeck.discard(card);
+        }
+    }
+
+    @GetMapping("/scoreboard")
     public String currentScoreboard(){
         return String.format("%d %d %d %d %d %d %d %d",
                 PLAYER_1.handSize(), PLAYER_1.getShields(), PLAYER_2.handSize(), PLAYER_2.getShields(),
@@ -50,8 +63,8 @@ public class Game {
     }
 
     public void initializeDecks(){
-        adventureDeck = new Deck("F5/8,F10/7,F15/8,F20/7,F25/7,F30/4,F35/4,F40/2,F50/2,F70/1,D5/6,H10/12,S10/16,B15/8,L20/6,E30/2");
-        eventDeck = new Deck("Q2/3,Q3/4,Q4/3,Q5/2,E-Plague/1,E-Queen's Favor/2,E-Prosperity/2");
+        adventureDeck = new Deck("F5/8,F10/7,F15/8,F20/7,F25/7,F30/4,F35/4,F40/2,F50/2,F70/1,D5/6,H10/12,S10/16,B15/8,L20/6,E30/20000");
+        eventDeck = new Deck("E-Queen's Favor/2"); //"Q2/3,Q3/4,Q4/3,Q5/2,E-Plague/1,E-Queen's Favor/2,E-Prosperity/2"
     }
 
     @GetMapping("getHand")
@@ -105,13 +118,20 @@ public class Game {
         output.flush();
     }
 
+
+    @GetMapping("/drawEvent")
+    public String webDrawEvent(@RequestParam String p){
+        Player player = getPlayerById(Integer.parseInt(p));
+        return drawEvent(new Scanner("\n\n\n"), new PrintWriter(System.out), player);
+    }
+
     // draw an event card
     // identify the event card and its effect
-    public String drawEvent(Scanner input, PrintWriter output){
+    public String drawEvent(Scanner input, PrintWriter output, Player p){
         output.println("Drawing event...");
         output.flush();
-        input.nextLine();
         String event = eventDeck.draw();
+        eventDeck.discard(event);
 
         switch (event){
             case "Q2":
@@ -120,17 +140,16 @@ public class Game {
             case "Q5":
                 output.println("Sponsor a quest: " + event);
                 output.flush();
-                input.nextLine();
                 return event;
 
             case "E-Plague":
                 output.println("E-Plague: Lose 2 shields");
-                activePlayer.decreaseShields(2);
+                p.decreaseShields(2);
                 break;
             case "E-Queen's Favor":
                 output.println("E-Queen's Favor: Draw 2 adventure cards");
-                activePlayer.add(adventureDeck.draw());
-                activePlayer.add(adventureDeck.draw());
+                p.add(adventureDeck.draw());
+                p.add(adventureDeck.draw());
                 break;
             case "E-Prosperity":
                 output.println("E-Prosperity: All players draw 2 adventure cards");
@@ -143,8 +162,7 @@ public class Game {
                 break;
         }
         output.flush();
-        input.nextLine();
-        return null;
+        return event;
     }
 
     public Player triggerQuest(Scanner input, PrintWriter output, String quest){
@@ -493,7 +511,7 @@ public class Game {
         while(true){
             startTurn(input, output, activePlayer);
             trim(input, output, activePlayer);
-            String quest = drawEvent(input, output);
+            String quest = drawEvent(input, output, activePlayer);
             if (quest != null){
                 Player sponsor = triggerQuest(input, output, quest);
                 ArrayList<ArrayList<String>> overview = null;

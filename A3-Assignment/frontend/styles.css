@@ -15,3 +15,7 @@
     max-top: 50%;
     top: 100px;
 }
+
+.selected {
+    background-color: green;
+}

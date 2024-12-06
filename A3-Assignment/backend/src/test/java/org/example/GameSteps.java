@@ -53,7 +53,7 @@ public class GameSteps {
         }
         game.eventDeck.swap(game.eventDeck.cardList.indexOf(event), game.eventDeck.size()-1);
 
-        eventCard = game.drawEvent(new Scanner("\n\n\n\n\n"), new PrintWriter(System.out));
+        eventCard = game.drawEvent(new Scanner("\n\n\n\n\n"), new PrintWriter(System.out), game.activePlayer);
     }
 
     @Then("Player {int} sponsors the {string} and builds {string}")

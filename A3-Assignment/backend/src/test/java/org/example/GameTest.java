@@ -337,7 +337,7 @@ class GameTest {
 
         Scanner input = new Scanner("\n\n\n\n\n");
         StringWriter output = new StringWriter();
-        testGame.drawEvent(input, new PrintWriter(output));
+        testGame.drawEvent(input, new PrintWriter(output), testGame.activePlayer);
 
         // Confirm prosperity is drawn and declared
         assertTrue(output.toString().contains("E-Prosperity"));
@@ -353,7 +353,7 @@ class GameTest {
 
         Scanner input = new Scanner("\n\n\n\n\n");
         StringWriter output = new StringWriter();
-        testGame.drawEvent(input, new PrintWriter(output));
+        testGame.drawEvent(input, new PrintWriter(output), testGame.activePlayer);
 
         // Confirm Q2 is drawn and declared
         assertTrue(output.toString().contains("Sponsor a quest: Q2"));
@@ -370,19 +370,19 @@ class GameTest {
         // test e-plague
         testGame.PLAYER_1.addShields(2);
         testGame.eventDeck.swap(12, 16);
-        testGame.drawEvent(input, new PrintWriter(output));
+        testGame.drawEvent(input, new PrintWriter(output), testGame.activePlayer);
         assertEquals(0, testGame.PLAYER_1.getShields());
 
         testGame.initializeDecks();
         testGame.eventDeck.swap(12, 16);
         testGame.PLAYER_1.addShields(1);
-        testGame.drawEvent(input, new PrintWriter(output));
+        testGame.drawEvent(input, new PrintWriter(output), testGame.activePlayer);
         assertEquals(0, testGame.PLAYER_1.getShields());
 
         testGame.initializeDecks();
         testGame.eventDeck.swap(12, 16);
         testGame.PLAYER_1.addShields(5);
-        testGame.drawEvent(input, new PrintWriter(output));
+        testGame.drawEvent(input, new PrintWriter(output), testGame.activePlayer);
         assertEquals(3, testGame.PLAYER_1.getShields());
 
 
@@ -398,7 +398,7 @@ class GameTest {
 
         // test e-queen's favor
         testGame.eventDeck.swap(13, 16);
-        testGame.drawEvent(input, new PrintWriter(output));
+        testGame.drawEvent(input, new PrintWriter(output), testGame.activePlayer);
 
         assertEquals(14, testGame.PLAYER_1.handSize());
         assertEquals(12, testGame.PLAYER_2.handSize());
@@ -415,7 +415,7 @@ class GameTest {
         StringWriter output = new StringWriter();
 
         // test e-prosperity, each player has 12 + 2 cards
-        testGame.drawEvent(input, new PrintWriter(output));
+        testGame.drawEvent(input, new PrintWriter(output), testGame.activePlayer);
 
         assertEquals(14, testGame.PLAYER_1.handSize());
         assertEquals(14, testGame.PLAYER_2.handSize());
@@ -1097,7 +1097,7 @@ class GameTest {
             inputString = "\n\n\n";
             testGame.startTurn(new Scanner(inputString), new PrintWriter(output), testGame.activePlayer);
             testGame.trim(new Scanner(inputString), new PrintWriter(output), testGame.activePlayer);
-            String quest = testGame.drawEvent(new Scanner(inputString), new PrintWriter(output));
+            String quest = testGame.drawEvent(new Scanner(inputString), new PrintWriter(output), testGame.activePlayer);
             if (quest != null){
 
                 inputString = "\n\n\nn\n\ny\n\n";
